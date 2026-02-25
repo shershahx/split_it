@@ -159,6 +159,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 *Split bills. Simplify debts. Stay friends.*
 
-[![GitHub](https://img.shields.io/badge/GitHub-SherryKhwan-181717?logo=github&logoColor=white)](https://github.com/SherryKhwan)
+[![GitHub](https://img.shields.io/badge/GitHub-shershahx-181717?logo=github&logoColor=white)](https://github.com/shershahx)
 
 </div>

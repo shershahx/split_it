@@ -1,5 +1,14 @@
-plugins {
-    id("com.huawei.agconnect") version "1.9.1.301" apply false
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://developer.huawei.com/repo/") }
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20")
+        classpath("com.huawei.agconnect:agcp:1.9.1.301")
+    }
 }
 
 allprojects {
