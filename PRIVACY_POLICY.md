@@ -192,7 +192,7 @@ If you are a California resident, you have the right to:
 
 For privacy-related questions, data requests, or concerns:
 
-**Email**: privacy@splitit.app  
+**Email**: splitit.privacy@gmail.com  
 **Response Time**: Within 10 business days
 
 ---
