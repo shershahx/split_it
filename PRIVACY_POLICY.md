@@ -1,13 +1,15 @@
-# Split It - Privacy Policy
+# Split It — Privacy Policy
 
-**Effective Date**: December 2024  
-**Last Updated**: December 2024
+**Effective Date**: February 2026  
+**Last Updated**: February 25, 2026
+
+---
 
 ## 1. Introduction
 
-Split It (the "App") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information.
+Split It ("the App") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application distributed via **Huawei AppGallery**.
 
-**Important**: By downloading, accessing, or using Split It, you acknowledge that you are at least 13 years old and agree to this Privacy Policy.
+**Important**: By downloading, accessing, or using Split It, you acknowledge that you are at least **13 years old** and agree to this Privacy Policy.
 
 ---
 
@@ -15,42 +17,45 @@ Split It (the "App") is committed to protecting your privacy. This Privacy Polic
 
 ### 2.1 Information You Provide Directly
 
-- **Account Information**: Email address, name, phone number, profile picture
-- **Group Information**: Group names, member details, expense descriptions
-- **Expense Data**: Amounts, categories, receipts, dates, payer information, notes
-- **Communications**: Comments, notes attached to expenses
+| Category | Examples |
+|----------|---------|
+| **Account Information** | Email address, display name |
+| **Group Information** | Group names, member IDs, expense descriptions |
+| **Expense Data** | Amounts, dates, payer information, split details |
+| **Settlement Data** | Payment records between group members |
+| **Friend Data** | Friend names, email addresses |
 
 ### 2.2 Information Collected Automatically
 
-- **Device Information**: Device model, operating system, unique device ID
-- **Usage Data**: Features used, time spent in app, actions taken
-- **Log Data**: IP address, crash reports, app performance metrics
-- **Location**: Only if you explicitly grant permission (for group meetings, trips)
+- **Device Information**: Device model, operating system version
+- **Usage Data**: Features used, actions taken within the app
+- **Log Data**: Crash reports, app performance metrics
+- **Authentication Tokens**: Managed securely by AGConnect Auth
 
-### 2.3 Information from Camera/Gallery
+### 2.3 Information We Do NOT Collect
 
-- **Receipt Photos**: Stored securely in Firebase Cloud Storage
-- **Profile Pictures**: Stored securely in Firebase Cloud Storage
+- We do **not** collect location data
+- We do **not** access your contacts
+- We do **not** track browsing activity outside the app
 
 ---
 
 ## 3. How We Use Your Information
 
-We use collected information for:
+We use collected information to:
 
-- Creating and maintaining your account
-- Processing your requests and transactions
-- Sending reminders about unpaid debts
-- Improving app functionality and user experience
-- Detecting and preventing fraud
-- Complying with legal obligations
-- Customer support and troubleshooting
-- Analytics (anonymized and aggregated)
+- Create and maintain your account
+- Process expense splits and settlement records
+- Display balance calculations between group members
+- Improve app functionality and user experience
+- Detect and prevent misuse
+- Provide customer support
 
 **We do NOT**:
-- Sell your personal information to third parties
-- Share data with marketing companies
-- Use your data for targeted advertising (except app improvement)
+- ❌ Sell your personal information to third parties
+- ❌ Share data with marketing or advertising companies
+- ❌ Use your data for targeted advertising
+- ❌ Process or store payment card information
 
 ---
 
@@ -58,53 +63,51 @@ We use collected information for:
 
 ### 4.1 Where Data Is Stored
 
-- **Primary**: Google Firebase (cloud database)
-- **Region**: us-central1 (can be configured)
-- **Backup**: Automatically encrypted backups
+- **Cloud Database**: Huawei AGConnect Cloud DB
+- **Authentication**: Huawei AGConnect Auth Service
+- **Local Cache**: Encrypted on-device storage via Hive
+- **Region**: Data stored in Huawei Cloud regions as configured in AppGallery Connect
 
 ### 4.2 Security Measures
 
-- End-to-end encryption for sensitive data
-- HTTPS/SSL for all data transmission
-- Firebase Firestore security rules (user-scoped access)
-- Password hashing via Firebase Auth
-- Optional biometric authentication (fingerprint/face)
-- Secure storage for sensitive local data
+- ✅ HTTPS/TLS encryption for all data in transit
+- ✅ AGConnect Cloud DB security rules (user-scoped access)
+- ✅ Password hashing via AGConnect Auth
+- ✅ Secure local storage for sensitive credentials
+- ✅ Keystore-signed release builds
 
 ### 4.3 Data Retention
 
-- **Active Accounts**: Data retained while account is active
-- **Deleted Accounts**: Permanently deleted within 30 days
-- **Expense History**: Retained for lifetime of account (for accurate history)
-- **Backups**: Deleted after 90 days
+| Data Type | Retention Period |
+|-----------|-----------------|
+| Active Accounts | Retained while account is active |
+| Deleted Accounts | Permanently removed within 30 days |
+| Expense History | Retained for the lifetime of the account |
 
 ---
 
-## 5. Sharing & Third-Party Services
+## 5. Third-Party Services
 
-### 5.1 Third-Party Integrations
+### 5.1 Huawei Mobile Services (HMS)
 
-- **Firebase** (Google): Backend, auth, database, storage
-  - Privacy: https://firebase.google.com/support/privacy
-- **Google Sign-In**: OAuth authentication
-- **ML Kit** (Google): On-device text recognition (OCR)
-  - No data sent to Google (processing happens on your device)
+Split It uses the following HMS services:
 
-### 5.2 Payment Services (Coming Soon)
+| Service | Purpose | Privacy Policy |
+|---------|---------|---------------|
+| **AGConnect Auth** | User authentication (Email + Huawei ID) | [Huawei Privacy](https://consumer.huawei.com/en/privacy/) |
+| **AGConnect Cloud DB** | Cloud database for groups, expenses, settlements | [Huawei Privacy](https://consumer.huawei.com/en/privacy/) |
+| **Huawei Account Kit** | Huawei ID sign-in | [Huawei Privacy](https://consumer.huawei.com/en/privacy/) |
 
-When available:
-- **Venmo**: Initiates payments only; no data sharing
-- **PayPal**: Initiates payments only; no data sharing
-- **JazzCash/EasyPaisa** (Pakistan): Initiates payments; follows local privacy laws
+### 5.2 On-Device Processing
 
-**Note**: We do NOT process payments directly and do NOT store payment card information.
+- **ML Kit Text Recognition** (when implemented): Receipt OCR runs entirely **on-device**. No image data is sent to any server.
 
-### 5.3 When We Share Data
+### 5.3 When We May Share Data
 
 We only share data when:
-- Required by law (subpoena, legal process)
-- Necessary to enforce our Terms
-- To protect your rights and safety
+- Required by law (subpoena, court order, legal process)
+- Necessary to enforce our Terms of Service
+- Required to protect your rights and safety
 - With your explicit consent
 
 ---
@@ -112,9 +115,9 @@ We only share data when:
 ## 6. Age Verification & Children's Privacy
 
 - **Minimum Age**: 13 years old
-- **Age Verification**: Age gate on signup
-- **No Data from Children Under 13**: If discovered, we will delete their account immediately
-- **Parental Access**: Parents/guardians can request account information via support
+- **Age Verification**: Confirmed during account registration
+- **Children Under 13**: If we discover an account belongs to a child under 13, we will delete it immediately
+- **Parental Contact**: Parents/guardians may request account information via our support email
 
 ---
 
@@ -122,26 +125,26 @@ We only share data when:
 
 ### 7.1 Access & Portability
 
-- Request a copy of your data: support@splitit.app
-- Export your data in common formats (JSON, CSV)
+- Request a copy of your data via email
 - Response time: Within 30 days
 
 ### 7.2 Correction & Deletion
 
-- Update your profile anytime in Settings
-- Request data deletion: support@splitit.app
-- Account deletion is permanent (cannot be undone)
+- Update your display name anytime in Profile settings
+- Request full account deletion via email
+- Account deletion is permanent and cannot be reversed
 
 ### 7.3 Opt-Out Options
 
-- **Notifications**: Disable in app Settings
-- **Location Tracking**: Disable in device Settings
-- **Analytics**: Opt-out in app Settings
-- **Camera/Gallery**: Grant/deny in device Settings
+| Setting | How to Change |
+|---------|--------------|
+| Notifications | Disable in app Settings |
+| Dark Mode | Toggle in app Settings |
+| Account | Delete via support request |
 
-### 7.3 GDPR Rights (EU/UK Users)
+### 7.4 GDPR Rights (EU/UK Users)
 
-If in EU/UK, you have rights to:
+If you are located in the EU or UK, you have the right to:
 - Access your personal data
 - Correct inaccurate data
 - Request deletion ("right to be forgotten")
@@ -150,71 +153,48 @@ If in EU/UK, you have rights to:
 - Object to processing
 - Lodge complaints with your local data protection authority
 
-**Contact for GDPR requests**: privacy@splitit.app
+### 7.5 CCPA Rights (California Residents)
+
+If you are a California resident, you have the right to:
+- Know what personal data is collected, used, and shared
+- Delete personal information
+- Opt-out of data sales (**we do not sell data**)
+- Non-discrimination for exercising these rights
 
 ---
 
 ## 8. Data Transfers
 
-- **International Transfer**: Data may be stored in multiple regions
-- **Standard Contractual Clauses**: EU/UK data transfers comply with GDPR
-- **Your Consent**: By using the app, you consent to such transfers
+- Data may be stored in Huawei Cloud regions outside your country
+- By using the app, you consent to such transfers
+- All transfers comply with applicable data protection regulations
 
 ---
 
 ## 9. Cookies & Tracking
 
-- **No Cookies**: Mobile app does not use cookies
-- **Local Storage**: Only non-sensitive preferences stored locally
-- **Analytics**: Anonymous session tracking (no personal ID attached)
+- **No cookies**: The app does not use cookies
+- **Local storage**: Only non-sensitive preferences (e.g., theme setting) stored locally
+- **No third-party analytics trackers**
 
 ---
 
-## 10. Contact Us
-
-For privacy-related questions:
-
-**Email**: privacy@splitit.app  
-**Mailing Address**: [Your Company Address]  
-**Phone**: [Your Contact Number]  
-**Response Time**: We respond within 10 business days
-
----
-
-## 11. Changes to This Policy
+## 10. Changes to This Policy
 
 - We may update this policy periodically
-- Major changes require explicit notification
-- Continued use implies acceptance of new policy
-- Last update: December 2024
+- Significant changes will be communicated via in-app notification
+- Continued use after changes implies acceptance of the updated policy
+- The "Last Updated" date at the top reflects the most recent revision
 
 ---
 
-## 12. California Privacy Rights (CCPA)
+## 11. Contact Us
 
-If you are a California resident, you have rights to:
-- Know what data is collected, used, shared
-- Delete personal information
-- Opt-out of data sales (we do not sell data)
-- Non-discrimination for exercising these rights
+For privacy-related questions, data requests, or concerns:
 
-**California Residents Contact**: ccpa@splitit.app
-
----
-
-## 13. Summary
-
-**Your Privacy Matters**: We use privacy-by-design principles:
-- ✅ Minimal data collection
-- ✅ Strong security
-- ✅ User control
-- ✅ Transparency
-- ✅ Compliance with GDPR, CCPA, and other regulations
+**Email**: privacy@splitit.app  
+**Response Time**: Within 10 business days
 
 ---
 
 **By using Split It, you acknowledge you have read and understood this Privacy Policy.**
-
----
-
-**Questions?** Email: privacy@splitit.app
