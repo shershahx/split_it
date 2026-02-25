@@ -1,0 +1,22 @@
+{
+  "cloudDBZoneName": "cloudDBZoneName1",
+  "objectTypeName": "testObjectTypeName",
+  "objects": [
+    {
+      "field1": "string1",
+      "field2": 100,
+      "field3": 100,
+      "field4": "text1",
+      "field5": 10.5,
+      "field6": 10
+    },
+    {
+      "field1": "string2",
+      "field2": 200,
+      "field3": 200,
+      "field4": "text2",
+      "field5": 20.5,
+      "field6": 20
+    }
+  ]
+}
