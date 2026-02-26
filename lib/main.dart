@@ -10,13 +10,10 @@ import 'core/services/cloud_db_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // AGConnect is auto-initialized via agconnect-services.json
-  // No explicit init call needed (handled by the plugin)
-
   // Initialize Hive for local storage
   await Hive.initFlutter();
 
-  // Initialize Cloud DB so the zone is ready before any repository call
+  // Initialize Cloud DB (stub for now - HMS ready for AppGallery)
   final cloudDb = CloudDbService();
   await cloudDb.init();
 

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // Primary Colors - Deep Teal (Trust, Finance)
-  static const Color primary = Color(0xFF00796B);
-  static const Color primaryLight = Color(0xFF48A999);
-  static const Color primaryDark = Color(0xFF004C40);
+  // Primary Colors - Cobalt Blue (Trust, Finance)
+  static const Color primary = Color(0xFF1565C0);
+  static const Color primaryLight = Color(0xFF5E92F3);
+  static const Color primaryDark = Color(0xFF003C8F);
 
   // Secondary Colors - Vibrant Green (Positive/Success)
   static const Color secondary = Color(0xFF4CAF50);

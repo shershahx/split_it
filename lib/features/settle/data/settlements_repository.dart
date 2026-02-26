@@ -1,5 +1,4 @@
 // lib/features/settle/data/settlements_repository.dart
-import 'package:agconnect_clouddb/agconnect_clouddb.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/cloud_db_service.dart';
 import '../../../shared/models/settlement.dart';
@@ -17,7 +16,7 @@ class SettlementsRepository {
   /// Fetch all settlements for a group
   Future<List<Settlement>> getSettlements(String groupId) async {
     try {
-      final query = AGConnectCloudDBQuery(_objectTypeName);
+      final query = CloudDBQuery(_objectTypeName);
       query.equalTo('groupId', groupId);
 
       final result = await _cloudDbService.executeQuery(query);
@@ -54,7 +53,7 @@ class SettlementsRepository {
   /// Get settlement by ID
   Future<Settlement?> getSettlementById(String settlementId) async {
     try {
-      final query = AGConnectCloudDBQuery(_objectTypeName);
+      final query = CloudDBQuery(_objectTypeName);
       query.equalTo('id', settlementId);
 
       final result = await _cloudDbService.executeQuery(query);

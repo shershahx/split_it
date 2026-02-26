@@ -1,5 +1,4 @@
 // lib/features/groups/data/groups_repository.dart
-import 'package:agconnect_clouddb/agconnect_clouddb.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/cloud_db_service.dart';
 import '../../../shared/models/group.dart';
@@ -32,7 +31,7 @@ class GroupsRepository {
       // Since Cloud DB doesn't support 'array-contains' natively in this simple API wrapper easily,
       // and we are storing memberIds as a list, we fetch all groups and filter client-side.
       // This is inefficient for large datasets but works for MVP.
-      final query = AGConnectCloudDBQuery(_objectTypeName);
+      final query = CloudDBQuery(_objectTypeName);
       
       final result = await _cloudDbService.executeQuery(query);
       final allGroups = result.map((map) => Group.fromMap(map)).toList();
@@ -55,7 +54,7 @@ class GroupsRepository {
   // Get group by ID
   Future<Group?> getGroup(String groupId) async {
      try {
-      final query = AGConnectCloudDBQuery(_objectTypeName);
+      final query = CloudDBQuery(_objectTypeName);
       query.equalTo("id", groupId);
       
       final result = await _cloudDbService.executeQuery(query);

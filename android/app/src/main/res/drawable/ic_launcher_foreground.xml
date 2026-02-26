@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- White receipt icon with split line - represents "Split It" -->
+    <!-- Receipt body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M33,24 L33,24 C33,22.9 33.9,22 35,22 L73,22 C74.1,22 75,22.9 75,24 L75,80 L71,76 L67,80 L63,76 L59,80 L55,76 L51,80 L47,76 L43,80 L39,76 L35,80 L33,78 Z" />
+    <!-- Receipt lines (text lines) -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M40,34 L68,34"
+        android:strokeWidth="2.5"
+        android:strokeColor="#1565C0" />
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M40,42 L68,42"
+        android:strokeWidth="2.5"
+        android:strokeColor="#1565C0" />
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M40,50 L56,50"
+        android:strokeWidth="2.5"
+        android:strokeColor="#1565C0" />
+    <!-- Split/divide line (diagonal) -->
+    <path
+        android:pathData="M60,50 L68,58"
+        android:strokeWidth="2.5"
+        android:strokeColor="#1565C0" />
+    <path
+        android:pathData="M68,50 L60,58"
+        android:strokeWidth="2.5"
+        android:strokeColor="#1565C0" />
+    <!-- Dollar amount -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M40,66 L52,66"
+        android:strokeWidth="3"
+        android:strokeColor="#1565C0" />
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M58,66 L68,66"
+        android:strokeWidth="2"
+        android:strokeColor="#1565C0" />
+</vector>

@@ -1,5 +1,4 @@
 // lib/features/friends/data/friends_repository.dart
-import 'package:agconnect_clouddb/agconnect_clouddb.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/cloud_db_service.dart';
 import '../../../shared/models/friend.dart';
@@ -17,7 +16,7 @@ class FriendsRepository {
   // Fetch friends for a user
   Future<List<Friend>> getFriends(String userId) async {
     try {
-      final query = AGConnectCloudDBQuery(_objectTypeName);
+      final query = CloudDBQuery(_objectTypeName);
       query.equalTo("userId1", userId);
       
       final result = await _cloudDbService.executeQuery(query);
@@ -48,7 +47,7 @@ class FriendsRepository {
   // Get a single friend by ID
   Future<Friend?> getFriendById(String friendId) async {
     try {
-      final query = AGConnectCloudDBQuery(_objectTypeName);
+      final query = CloudDBQuery(_objectTypeName);
       query.equalTo('id', friendId);
       final result = await _cloudDbService.executeQuery(query);
       if (result.isEmpty) return null;

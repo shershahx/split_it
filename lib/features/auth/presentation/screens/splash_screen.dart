@@ -10,7 +10,7 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.attach_money, size: 64, color: Color(0xFF00796B)),
+            const Icon(Icons.receipt_long, size: 64, color: Color(0xFF1565C0)),
             const SizedBox(height: 16),
             const Text('Split It', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 32),

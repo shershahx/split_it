@@ -1,5 +1,4 @@
 // lib/features/expenses/data/expenses_repository.dart
-import 'package:agconnect_clouddb/agconnect_clouddb.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/cloud_db_service.dart';
 import '../../../shared/models/expense.dart';
@@ -17,7 +16,7 @@ class ExpensesRepository {
   // Fetch expenses for a group
   Future<List<Expense>> getExpenses(String groupId) async {
     try {
-      final query = AGConnectCloudDBQuery(_objectTypeName);
+      final query = CloudDBQuery(_objectTypeName);
       query.equalTo("groupId", groupId);
       query.orderBy("date", ascending: false);
       
@@ -49,7 +48,7 @@ class ExpensesRepository {
   // Get a single expense by ID
   Future<Expense?> getExpenseById(String expenseId) async {
     try {
-      final query = AGConnectCloudDBQuery(_objectTypeName);
+      final query = CloudDBQuery(_objectTypeName);
       query.equalTo('id', expenseId);
       final result = await _cloudDbService.executeQuery(query);
       if (result.isEmpty) return null;
