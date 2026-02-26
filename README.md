@@ -120,7 +120,7 @@ Read our full [Privacy Policy](PRIVACY_POLICY.md).
 ### Quick Start
 
 ```bash
-git clone https://github.com/SherryKhwan/split_it.git
+git clone https://github.com/shershahx/split_it.git
 cd split_it
 flutter pub get
 flutter run
