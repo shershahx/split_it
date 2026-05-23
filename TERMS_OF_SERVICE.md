@@ -88,7 +88,7 @@ Your use of third-party services may be governed by their terms and policies. We
 
 ## 8. Privacy
 
-Our collection and use of personal information is described in our **Privacy Policy** (if/when provided). If you need a copy, contact us at **[ADD SUPPORT EMAIL]**.
+Our collection and use of personal information is described in our **Privacy Policy** (if/when provided). If you need a copy, contact us at **[splitit.support@gmail.com]**.
 
 ---
 
@@ -175,8 +175,8 @@ Any dispute arising out of or relating to these Terms or the Service will be bro
 Questions about these Terms may be sent to:
 
 **Sher Shah**  
-Email: **[ADD SUPPORT EMAIL]**  
-Address: **[OPTIONAL MAILING ADDRESS]**
+Email: **[splitit.support@gmail.com]**  
+Address: **[Islamabad - Pakistan]**
 
 ---
 
