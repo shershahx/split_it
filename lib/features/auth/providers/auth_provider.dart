@@ -1,32 +1,49 @@
-// lib/features/auth/providers/auth_provider.dart
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../shared/models/app_user.dart';
 import '../data/auth_service.dart';
 
-// Auth service provider
-final authServiceProvider = Provider<AuthService>((ref) => AuthService());
+final supabaseClientProvider = Provider<SupabaseClient>(
+  (ref) => Supabase.instance.client,
+);
 
-// Auth state - manually managed (AGConnect has no auth state stream)
+final authServiceProvider = Provider<AuthService>(
+  (ref) => AuthService(ref.watch(supabaseClientProvider)),
+);
+
+final passwordRecoveryProvider = StateProvider<bool>((ref) => false);
+
 final authStateProvider =
     StateNotifierProvider<AuthNotifier, AsyncValue<AppUser?>>((ref) {
-  return AuthNotifier(ref.read(authServiceProvider));
-});
+      return AuthNotifier(
+        ref.read(authServiceProvider),
+        onPasswordRecovery: () {
+          ref.read(passwordRecoveryProvider.notifier).state = true;
+        },
+      );
+    });
 
 class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
-  final AuthService _authService;
-
-  AuthNotifier(this._authService) : super(const AsyncValue.loading()) {
-    _checkCurrentUser();
+  AuthNotifier(this._authService, {required void Function() onPasswordRecovery})
+    : super(AsyncValue.data(_authService.getCurrentUser())) {
+    _authSubscription = _authService.authStateChanges.listen((authState) {
+      if (authState.event == AuthChangeEvent.passwordRecovery) {
+        onPasswordRecovery();
+      }
+      state = AsyncValue.data(_authService.getCurrentUser());
+    });
   }
 
-  Future<void> _checkCurrentUser() async {
-    try {
-      final user = await _authService.getCurrentUser();
-      state = AsyncValue.data(user);
-    } catch (e) {
-      state = const AsyncValue.data(null);
-    }
+  final AuthService _authService;
+  late final StreamSubscription<AuthState> _authSubscription;
+
+  @override
+  void dispose() {
+    _authSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> signInWithEmail(String email, String password) async {
@@ -37,28 +54,18 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     state = AsyncValue.data(user);
   }
 
-  Future<void> requestVerifyCode(String email) async {
-    await _authService.requestEmailVerifyCode(email);
-  }
-
-  Future<void> registerWithEmail({
+  Future<bool> registerWithEmail({
     required String email,
     required String password,
-    required String verifyCode,
     required String name,
   }) async {
-    final user = await _authService.registerWithEmailPassword(
+    final requiresConfirmation = await _authService.registerWithEmailPassword(
       email: email,
       password: password,
-      verifyCode: verifyCode,
       name: name,
     );
-    state = AsyncValue.data(user);
-  }
-
-  Future<void> signInWithHuaweiId() async {
-    final user = await _authService.signInWithHuaweiId();
-    state = AsyncValue.data(user);
+    state = AsyncValue.data(_authService.getCurrentUser());
+    return requiresConfirmation;
   }
 
   Future<void> signOut() async {
@@ -71,27 +78,16 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     state = AsyncValue.data(user);
   }
 
-  Future<void> requestPasswordResetCode(String email) async {
-    await _authService.requestPasswordResetCode(email);
-  }
+  Future<void> sendPasswordResetEmail(String email) =>
+      _authService.sendPasswordResetEmail(email);
 
-  Future<void> resetPassword({
-    required String email,
-    required String newPassword,
-    required String verifyCode,
-  }) async {
-    await _authService.resetPassword(
-      email: email,
-      newPassword: newPassword,
-      verifyCode: verifyCode,
-    );
-  }
+  Future<void> updatePassword(String newPassword) =>
+      _authService.updatePassword(newPassword);
 }
 
 // Convenience provider for current user
 final currentUserProvider = Provider<AppUser?>((ref) {
-  return ref.watch(authStateProvider).maybeWhen(
-        data: (user) => user,
-        orElse: () => null,
-      );
+  return ref
+      .watch(authStateProvider)
+      .maybeWhen(data: (user) => user, orElse: () => null);
 });

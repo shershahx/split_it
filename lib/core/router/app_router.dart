@@ -25,7 +25,8 @@ import '../../features/settle/presentation/screens/settle_up_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
-  
+  final isPasswordRecovery = ref.watch(passwordRecoveryProvider);
+
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
@@ -38,11 +39,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         loading: () => true,
         orElse: () => false,
       );
-      
-      final isLoggingIn = state.matchedLocation == '/login' ||
+
+      final isLoggingIn =
+          state.matchedLocation == '/login' ||
           state.matchedLocation == '/register' ||
           state.matchedLocation == '/forgot-password';
       final isSplash = state.matchedLocation == '/';
+
+      if (isPasswordRecovery && state.matchedLocation != '/forgot-password') {
+        return '/forgot-password';
+      }
 
       // Stay on splash while loading auth state
       if (isLoading && isSplash) return null;
@@ -56,7 +62,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return '/login';
       }
 
-      if (isLoggedIn && isLoggingIn) {
+      if (isLoggedIn && isLoggingIn && !isPasswordRecovery) {
         return '/groups';
       }
 
@@ -204,10 +210,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
     ],
-    errorBuilder: (context, state) => Scaffold(
-      body: Center(
-        child: Text('Page not found: ${state.uri}'),
-      ),
-    ),
+    errorBuilder: (context, state) =>
+        Scaffold(body: Center(child: Text('Page not found: ${state.uri}'))),
   );
 });

@@ -13,34 +13,21 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
-  final _codeController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  bool _codeSent = false;
+  bool _emailSent = false;
   bool _isLoading = false;
-  int _cooldown = 0;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _codeController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void _startCooldown() {
-    setState(() => _cooldown = 60);
-    Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 1));
-      if (!mounted) return false;
-      setState(() => _cooldown--);
-      return _cooldown > 0;
-    });
-  }
-
-  Future<void> _requestCode() async {
+  Future<void> _sendResetLink() async {
     final email = _emailController.text.trim();
     if (email.isEmpty || !email.contains('@')) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -51,68 +38,67 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     setState(() => _isLoading = true);
     try {
-      await ref.read(authStateProvider.notifier).requestPasswordResetCode(email);
+      await ref.read(authStateProvider.notifier).sendPasswordResetEmail(email);
       if (mounted) {
-        setState(() => _codeSent = true);
-        _startCooldown();
+        setState(() => _emailSent = true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Verification code sent to your email')),
+          const SnackBar(content: Text('Password reset link sent')),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  Future<void> _resetPassword() async {
-    final email = _emailController.text.trim();
-    final code = _codeController.text.trim();
+  Future<void> _updatePassword() async {
     final password = _newPasswordController.text;
     final confirm = _confirmPasswordController.text;
 
-    if (code.isEmpty) {
+    if (password.length < 12 ||
+        !RegExp(r'[A-Z]').hasMatch(password) ||
+        !RegExp(r'[a-z]').hasMatch(password) ||
+        !RegExp(r'[0-9]').hasMatch(password) ||
+        !RegExp(r'[^A-Za-z0-9]').hasMatch(password)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter the verification code')),
-      );
-      return;
-    }
-    if (password.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password must be at least 6 characters')),
+        const SnackBar(
+          content: Text(
+            'Use 12+ characters with upper, lower, number, and symbol',
+          ),
+        ),
       );
       return;
     }
     if (password != confirm) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
       return;
     }
 
     setState(() => _isLoading = true);
     try {
-      await ref.read(authStateProvider.notifier).resetPassword(
-            email: email,
-            newPassword: password,
-            verifyCode: code,
-          );
+      await ref.read(authStateProvider.notifier).updatePassword(password);
+      ref.read(passwordRecoveryProvider.notifier).state = false;
+      await ref.read(authStateProvider.notifier).signOut();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password reset successfully. Please sign in.')),
+          const SnackBar(
+            content: Text('Password updated. Sign in with your new password.'),
+          ),
         );
-        context.pop();
+        context.go('/login');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -121,11 +107,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isRecovery = ref.watch(passwordRecoveryProvider);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reset Password'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Reset Password'), elevation: 0),
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
@@ -137,69 +122,50 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           const SizedBox(height: 16),
           Text(
             'Forgot your password?',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
-            'Enter your email to receive a verification code, then set a new password.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
+            isRecovery
+                ? 'Choose a strong new password for your account.'
+                : 'Enter your email and we will send you a secure reset link.',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-
-          // Email field
-          TextField(
-            controller: _emailController,
-            enabled: !_codeSent,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              hintText: 'you@example.com',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.email_outlined),
+          if (!isRecovery) ...[
+            TextField(
+              controller: _emailController,
+              enabled: !_emailSent,
+              autofillHints: const [AutofillHints.email],
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                hintText: 'you@example.com',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.email_outlined),
+              ),
+              keyboardType: TextInputType.emailAddress,
             ),
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 16),
-
-          if (!_codeSent) ...[
+            const SizedBox(height: 16),
             SizedBox(
               height: 50,
               child: ElevatedButton(
-                onPressed: _isLoading ? null : _requestCode,
+                onPressed: (_isLoading || _emailSent) ? null : _sendResetLink,
                 child: _isLoading
                     ? const SizedBox(
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Send Verification Code'),
+                    : Text(_emailSent ? 'Check Your Email' : 'Send Reset Link'),
               ),
             ),
           ] else ...[
-            // Verification code
-            TextField(
-              controller: _codeController,
-              decoration: InputDecoration(
-                labelText: 'Verification Code',
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.pin),
-                suffixIcon: TextButton(
-                  onPressed: _cooldown > 0 ? null : _requestCode,
-                  child: Text(
-                    _cooldown > 0 ? '${_cooldown}s' : 'Resend',
-                  ),
-                ),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-
-            // New password
             TextField(
               controller: _newPasswordController,
               decoration: const InputDecoration(
@@ -208,10 +174,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 prefixIcon: Icon(Icons.lock_outline),
               ),
               obscureText: true,
+              autofillHints: const [AutofillHints.newPassword],
             ),
             const SizedBox(height: 16),
-
-            // Confirm password
             TextField(
               controller: _confirmPasswordController,
               decoration: const InputDecoration(
@@ -220,13 +185,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 prefixIcon: Icon(Icons.lock_outline),
               ),
               obscureText: true,
+              autofillHints: const [AutofillHints.newPassword],
             ),
             const SizedBox(height: 24),
-
             SizedBox(
               height: 50,
               child: ElevatedButton(
-                onPressed: _isLoading ? null : _resetPassword,
+                onPressed: _isLoading ? null : _updatePassword,
                 child: _isLoading
                     ? const SizedBox(
                         height: 20,

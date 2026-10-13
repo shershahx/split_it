@@ -30,30 +30,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      await ref.read(authStateProvider.notifier).signInWithEmail(
-            _emailController.text,
-            _passwordController.text,
-          );
-      if (mounted) context.go('/groups');
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _signInWithHuaweiId() async {
-    setState(() => _isLoading = true);
-
-    try {
-      await ref.read(authStateProvider.notifier).signInWithHuaweiId();
+      await ref
+          .read(authStateProvider.notifier)
+          .signInWithEmail(_emailController.text, _passwordController.text);
       if (mounted) context.go('/groups');
     } catch (e) {
       if (mounted) {
@@ -85,7 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Logo/Title
-                  Icon(
+                  const Icon(
                     Icons.receipt_long,
                     size: 80,
                     color: AppColors.primary,
@@ -178,32 +157,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         : const Text('Login'),
                   ),
                   const SizedBox(height: 16),
-
-                  // Divider
-                  Row(
-                    children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'OR',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: AppColors.textSecondaryLight,
-                          ),
-                        ),
-                      ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Google Sign-In Button
-                  OutlinedButton.icon(
-                    onPressed: _isLoading ? null : _signInWithHuaweiId,
-                    icon: const Icon(Icons.phone_android, size: 24),
-                    label: const Text('Continue with Huawei ID'),
-                  ),
-                  const SizedBox(height: 24),
 
                   // Register Link
                   Row(

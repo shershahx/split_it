@@ -1,88 +1,77 @@
-// lib/features/auth/data/auth_service.dart
-// Development version with stubs - Production will use HMS for AppGallery
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../shared/models/app_user.dart';
 
 class AuthService {
-  // Get current user
-  Future<AppUser?> getCurrentUser() async {
-    // TODO: Implement Firebase Auth or HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
-  }
+  AuthService(this._client);
 
-  // Sign in with email and password
+  final SupabaseClient _client;
+
+  Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
+
+  AppUser? getCurrentUser() => _mapUser(_client.auth.currentUser);
+
   Future<AppUser> signInWithEmailPassword({
     required String email,
     required String password,
   }) async {
-    // TODO: Implement Firebase Auth or HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
+    final response = await _client.auth.signInWithPassword(
+      email: email.trim().toLowerCase(),
+      password: password,
+    );
+    final user = _mapUser(response.user);
+    if (user == null) {
+      throw const AuthException('Sign in did not return a user.');
+    }
+    return user;
   }
 
-  // Request email verification code (required before registration)
-  Future<void> requestEmailVerifyCode(String email) async {
-    // TODO: Implement Firebase Auth or HMS for production 
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
-  }
-
-  // Create user with email, password and verification code
-  Future<AppUser> createUserWithEmailPassword({
+  /// Returns true when email confirmation is required before sign-in.
+  Future<bool> registerWithEmailPassword({
     required String email,
     required String password,
-    required String verifyCode,
-  }) async {
-    // TODO: Implement Firebase Auth or HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
-  }
-
-  // Sign in with Huawei ID
-  Future<AppUser> signInWithHuaweiId() async {
-    // TODO: Implement HMS Huawei ID for production
-    throw UnimplementedError('Huawei ID authentication requires HMS - use for AppGallery production');
-  }
-
-  // Update user display name
-  Future<AppUser> updateDisplayName(String name) async {
-    // TODO: Implement Firebase Auth or HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
-  }
-
-  // Sign out
-  Future<void> signOut() async {
-    // TODO: Implement Firebase Auth or HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
-  }
-
-  // Register with email, password and verification code
-  Future<AppUser> registerWithEmailPassword({
-    required String email,
-    required String password,
-    required String verifyCode,
     required String name,
   }) async {
-    // TODO: Implement HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
+    final response = await _client.auth.signUp(
+      email: email.trim().toLowerCase(),
+      password: password,
+      data: {'display_name': name.trim()},
+      emailRedirectTo: 'com.splitit://auth-callback/',
+    );
+    return response.session == null;
   }
 
-  // Request password reset verification code
-  Future<void> requestPasswordResetCode(String email) async {
-    // TODO: Implement HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
+  Future<AppUser> updateDisplayName(String name) async {
+    final response = await _client.auth.updateUser(
+      UserAttributes(data: {'display_name': name.trim()}),
+    );
+    final user = _mapUser(response.user);
+    if (user == null) {
+      throw const AuthException('Profile update did not return a user.');
+    }
+    return user;
   }
 
-  // Reset password with verification code
-  Future<void> resetPassword({
-    required String email,
-    required String newPassword,
-    required String verifyCode,
-  }) async {
-    // TODO: Implement HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
-  }
+  Future<void> signOut() => _client.auth.signOut();
 
-  // Send password reset email
   Future<void> sendPasswordResetEmail(String email) async {
-    // TODO: Implement Firebase Auth or HMS for production
-    throw UnimplementedError('Authentication not implemented - ready for HMS integration');
+    await _client.auth.resetPasswordForEmail(
+      email.trim().toLowerCase(),
+      redirectTo: 'com.splitit://auth-callback/',
+    );
+  }
+
+  Future<void> updatePassword(String newPassword) async {
+    await _client.auth.updateUser(UserAttributes(password: newPassword));
+  }
+
+  AppUser? _mapUser(User? user) {
+    if (user == null) return null;
+    return AppUser(
+      uid: user.id,
+      email: user.email,
+      displayName: user.userMetadata?['display_name'] as String?,
+      photoUrl: user.userMetadata?['avatar_url'] as String?,
+      provider: user.appMetadata['provider'] as String?,
+    );
   }
 }

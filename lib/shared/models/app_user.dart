@@ -6,7 +6,7 @@ class AppUser extends Equatable {
   final String? email;
   final String? displayName;
   final String? photoUrl;
-  final String? provider; // 'email', 'hwid'
+  final String? provider;
 
   const AppUser({
     required this.uid,

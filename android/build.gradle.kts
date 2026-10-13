@@ -2,7 +2,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        // maven("https://developer.huawei.com/repo/") // Re-enable for HMS/AppGallery
     }
 }
 

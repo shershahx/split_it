@@ -5,15 +5,18 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.receipt_long, size: 64, color: Color(0xFF1565C0)),
-            const SizedBox(height: 16),
-            const Text('Split It', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 32),
+            Icon(Icons.receipt_long, size: 64, color: Color(0xFF1565C0)),
+            SizedBox(height: 16),
+            Text(
+              'Split It',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 32),
             CircularProgressIndicator(),
           ],
         ),

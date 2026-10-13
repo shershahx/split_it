@@ -14,7 +14,6 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        // maven("https://developer.huawei.com/repo/") // Re-enable for HMS/AppGallery
     }
 }
 
