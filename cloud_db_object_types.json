@@ -1,0 +1,317 @@
+{
+  "objectTypes": [
+    {
+      "objectTypeName": "Group",
+      "comment": "Group for splitting expenses",
+      "fields": [
+        {
+          "fieldName": "id",
+          "fieldType": "String",
+          "isPrimary": true,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Unique group ID"
+        },
+        {
+          "fieldName": "name",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Group name"
+        },
+        {
+          "fieldName": "description",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": false,
+          "defaultValue": null,
+          "comment": "Optional group description"
+        },
+        {
+          "fieldName": "imageUrl",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": false,
+          "defaultValue": null,
+          "comment": "Group image URL"
+        },
+        {
+          "fieldName": "createdBy",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "User ID who created the group"
+        },
+        {
+          "fieldName": "createdAt",
+          "fieldType": "Long",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Creation timestamp in milliseconds"
+        },
+        {
+          "fieldName": "memberIds",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "JSON array of member user IDs"
+        },
+        {
+          "fieldName": "currency",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": "USD",
+          "comment": "Currency code e.g. USD, EUR"
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "idx_group_id",
+          "indexColumns": "id",
+          "isUnique": true
+        },
+        {
+          "indexName": "idx_group_createdBy",
+          "indexColumns": "createdBy",
+          "isUnique": false
+        },
+        {
+          "indexName": "idx_group_createdAt",
+          "indexColumns": "createdAt",
+          "isUnique": false
+        }
+      ],
+      "permissions": [
+        { "roleType": 0, "queryPermission": 0, "upsertPermission": 0, "deletePermission": 0 },
+        { "roleType": 1, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 },
+        { "roleType": 2, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 },
+        { "roleType": 3, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 }
+      ]
+    },
+    {
+      "objectTypeName": "Expense",
+      "comment": "Expense transaction record",
+      "fields": [
+        {
+          "fieldName": "id",
+          "fieldType": "String",
+          "isPrimary": true,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Unique expense ID"
+        },
+        {
+          "fieldName": "groupId",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Foreign key to Group.id"
+        },
+        {
+          "fieldName": "description",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "What the expense was for"
+        },
+        {
+          "fieldName": "amount",
+          "fieldType": "Double",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Total expense amount"
+        },
+        {
+          "fieldName": "paidBy",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "User ID who paid"
+        },
+        {
+          "fieldName": "date",
+          "fieldType": "Long",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Expense date in milliseconds"
+        },
+        {
+          "fieldName": "split",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "JSON map of userId to amount owed"
+        },
+        {
+          "fieldName": "imageUrl",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": false,
+          "defaultValue": null,
+          "comment": "Optional receipt image URL"
+        },
+        {
+          "fieldName": "createdBy",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "User ID who added the expense"
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "idx_expense_id",
+          "indexColumns": "id",
+          "isUnique": true
+        },
+        {
+          "indexName": "idx_expense_groupId",
+          "indexColumns": "groupId",
+          "isUnique": false
+        },
+        {
+          "indexName": "idx_expense_paidBy",
+          "indexColumns": "paidBy",
+          "isUnique": false
+        },
+        {
+          "indexName": "idx_expense_date",
+          "indexColumns": "date",
+          "isUnique": false
+        },
+        {
+          "indexName": "idx_expense_createdBy",
+          "indexColumns": "createdBy",
+          "isUnique": false
+        }
+      ],
+      "permissions": [
+        { "roleType": 0, "queryPermission": 0, "upsertPermission": 0, "deletePermission": 0 },
+        { "roleType": 1, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 },
+        { "roleType": 2, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 },
+        { "roleType": 3, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 }
+      ]
+    },
+    {
+      "objectTypeName": "Friend",
+      "comment": "Friendship relationship with balance tracking",
+      "fields": [
+        {
+          "fieldName": "id",
+          "fieldType": "String",
+          "isPrimary": true,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Unique friendship record ID"
+        },
+        {
+          "fieldName": "userId1",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "The current user ID (owner of this record)"
+        },
+        {
+          "fieldName": "userId2",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "The friend user ID"
+        },
+        {
+          "fieldName": "balance",
+          "fieldType": "Double",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": "0.0",
+          "comment": "Positive = friend owes you, Negative = you owe friend"
+        },
+        {
+          "fieldName": "friendName",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": true,
+          "defaultValue": null,
+          "comment": "Display name of the friend"
+        },
+        {
+          "fieldName": "friendEmail",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": false,
+          "defaultValue": null,
+          "comment": "Email address of the friend"
+        },
+        {
+          "fieldName": "friendImageUrl",
+          "fieldType": "String",
+          "isPrimary": false,
+          "isEncrypted": false,
+          "notNull": false,
+          "defaultValue": null,
+          "comment": "Profile image URL of the friend"
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "idx_friend_id",
+          "indexColumns": "id",
+          "isUnique": true
+        },
+        {
+          "indexName": "idx_friend_userId1",
+          "indexColumns": "userId1",
+          "isUnique": false
+        },
+        {
+          "indexName": "idx_friend_userId2",
+          "indexColumns": "userId2",
+          "isUnique": false
+        }
+      ],
+      "permissions": [
+        { "roleType": 0, "queryPermission": 0, "upsertPermission": 0, "deletePermission": 0 },
+        { "roleType": 1, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 },
+        { "roleType": 2, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 },
+        { "roleType": 3, "queryPermission": 1, "upsertPermission": 1, "deletePermission": 1 }
+      ]
+    }
+  ]
+}
