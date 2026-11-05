@@ -27,68 +27,6 @@ class GroupsScreen extends ConsumerWidget {
     final groupsAsync = ref.watch(groupsProvider);
 
     return Scaffold(
-<<<<<<< HEAD
-      appBar: AppBar(title: const Text('Groups')),
-      body: groupsAsync.when(
-        data: (groups) => RefreshIndicator(
-          onRefresh: () => _refresh(context, ref),
-          child: groups.isEmpty
-              ? ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(32),
-                  children: [
-                    const SizedBox(height: 64),
-                    const Icon(Icons.group_outlined,
-                        size: 80, color: Colors.grey),
-                    const SizedBox(height: 16),
-                    Text('No groups yet',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleLarge),
-                    const SizedBox(height: 8),
-                    const Text('Create a group to start splitting expenses.',
-                        textAlign: TextAlign.center),
-                    const SizedBox(height: 16),
-                    FilledButton.icon(
-                      onPressed: () => context.push(AppRoutes.createGroup),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Create Group'),
-                    ),
-                  ],
-                )
-              : ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-                  itemCount: groups.length,
-                  itemBuilder: (context, index) {
-                    final group = groups[index];
-                    final name = group.name.trim();
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        leading: CircleAvatar(
-                          radius: 28,
-                          backgroundColor: AppColors.getAvatarColor(name),
-                          child: Text(
-                              name.isEmpty
-                                  ? '?'
-                                  : name.characters.first.toUpperCase(),
-                              style: const TextStyle(
-                                  fontSize: 24, color: Colors.white)),
-                        ),
-                        title: Text(name.isEmpty ? 'Unnamed group' : name,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.w600)),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (group.description?.trim().isNotEmpty ?? false)
-                              Text(group.description!,
-                                  maxLines: 1, overflow: TextOverflow.ellipsis),
-                            Text(
-                                '${group.memberIds.length} member${group.memberIds.length == 1 ? '' : 's'} • ${group.currency}'),
-                          ],
-=======
       appBar: AppBar(
         title: const Text('Groups'),
         elevation: 0,
@@ -184,35 +122,11 @@ class GroupsScreen extends ConsumerWidget {
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
                         ),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () =>
                             context.push('${AppRoutes.groups}/${group.id}'),
                       ),
-<<<<<<< HEAD
-                    );
-                  },
-                ),
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Failed to load groups: $error',
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 16),
-                FilledButton(
-                    onPressed: () => ref.invalidate(groupsProvider),
-                    child: const Text('Retry')),
-              ],
-            ),
-=======
                     ),
                     title: Text(
                       group.name,
@@ -269,19 +183,14 @@ class GroupsScreen extends ConsumerWidget {
                 child: const Text('Retry'),
               ),
             ],
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Create group',
-<<<<<<< HEAD
-        onPressed: () => context.push(AppRoutes.createGroup),
-=======
         onPressed: () {
           context.push(AppRoutes.createGroup);
         },
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
         child: const Icon(Icons.add),
       ),
     );

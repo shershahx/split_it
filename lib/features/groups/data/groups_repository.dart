@@ -1,10 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-<<<<<<< HEAD
-import '../../../core/services/cloud_db_service.dart';
-=======
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 import '../../../shared/models/group.dart';
 import '../../auth/providers/auth_provider.dart';
 
@@ -44,68 +40,6 @@ class GroupsRepository {
   GroupsRepository(this._client);
 
   final SupabaseClient _client;
-<<<<<<< HEAD
-
-  Group _fromRow(Map<String, dynamic> row) => Group(
-        id: row['id'] as String,
-        name: row['name'] as String,
-        description: row['description'] as String?,
-        imageUrl: row['image_url'] as String?,
-        createdBy: row['created_by'] as String,
-        createdAt: DateTime.parse(row['created_at'] as String),
-        memberIds: List<String>.from(row['member_ids'] as List),
-        currency: row['currency'] as String,
-      );
-
-  Future<List<Group>> getGroups(String userId) async {
-    // A scalar SQL array contains all members, independent of API row caps.
-    final rows = await CloudDbService.readAll(() => _client
-        .from('group_records')
-        .select()
-        .contains('member_ids', [userId]));
-    final groups = rows.map(_fromRow).toList();
-    groups.sort((a, b) {
-      final date = b.createdAt.compareTo(a.createdAt);
-      return date != 0 ? date : b.id.compareTo(a.id);
-    });
-    return groups;
-  }
-
-  Map<String, dynamic> _saveParams(Group group) => {
-        'p_id': group.id,
-        'p_name': group.name,
-        'p_description': group.description,
-        'p_image_url': group.imageUrl,
-        'p_currency': group.currency,
-        'p_member_ids': group.memberIds,
-        'p_created_by': group.createdBy,
-      };
-
-  Future<void> createGroup(Group group) async {
-    await _client.rpc('create_group', params: _saveParams(group));
-  }
-
-  Future<Group?> getGroup(String groupId) async {
-    final row = await _client
-        .from('group_records')
-        .select()
-        .eq('id', groupId)
-        .maybeSingle();
-    return row == null ? null : _fromRow(row);
-  }
-
-  /// Updates metadata and adds supplied members atomically. Membership removal
-  /// is deliberately not inferred from a potentially stale client snapshot.
-  Future<void> updateGroup(Group group) async {
-    await _client.rpc('update_group', params: _saveParams(group));
-  }
-
-  Future<void> addMember(String groupId, String memberId) async {
-    await _client.rpc('add_group_member', params: {
-      'p_group_id': groupId,
-      'p_member_id': memberId,
-    });
-=======
   static const pageSize = 20;
   static const _columns =
       'id,name,description,image_url,currency,created_by,created_at';
@@ -234,7 +168,6 @@ class GroupsRepository {
       'decline_group_invite',
       params: {'invite_id': inviteId},
     );
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   }
 }
 

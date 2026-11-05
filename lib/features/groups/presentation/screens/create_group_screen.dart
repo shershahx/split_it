@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-<<<<<<< HEAD
-import 'package:uuid/uuid.dart';
-=======
 import '../../../../core/router/app_routes.dart';
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 import '../../../../shared/models/group.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../data/groups_repository.dart';
@@ -35,13 +31,8 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
   }
 
   Future<void> _createGroup() async {
-<<<<<<< HEAD
-    if (_isLoading || !_formKey.currentState!.validate()) return;
-    FocusScope.of(context).unfocus();
-=======
     if (_isLoading) return;
     if (!_formKey.currentState!.validate()) return;
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 
     final user = ref.read(currentUserProvider);
     if (user == null) {
@@ -96,83 +87,6 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Group'),
-        elevation: 0,
-      ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _nameController,
-              enabled: !_isLoading,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                labelText: 'Group Name',
-                hintText: 'e.g., Roommates, Trip to Paris',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.group),
-              ),
-              textCapitalization: TextCapitalization.words,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter a group name';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _descriptionController,
-              enabled: !_isLoading,
-              decoration: const InputDecoration(
-                labelText: 'Description (Optional)',
-                hintText: 'What is this group for?',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.description),
-              ),
-              maxLines: 3,
-              textCapitalization: TextCapitalization.sentences,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _currencyController,
-              enabled: !_isLoading,
-              decoration: const InputDecoration(
-                labelText: 'Currency code',
-                helperText: 'All expenses in this group use this currency.',
-                hintText: 'USD, EUR, GBP…',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.payments_outlined),
-              ),
-              textCapitalization: TextCapitalization.characters,
-              textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) => _createGroup(),
-              validator: (value) {
-                final code = value?.trim().toUpperCase() ?? '';
-                if (!RegExp(r'^[A-Z]{3}$').hasMatch(code)) {
-                  return 'Enter a three-letter currency code';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              height: 50,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _createGroup,
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Create Group'),
-=======
     return PopScope(
       canPop: !_isLoading,
       child: Scaffold(
@@ -233,7 +147,6 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                 onChanged: _isLoading
                     ? null
                     : (value) => setState(() => _currency = value!),
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
               ),
               const SizedBox(height: 24),
               SizedBox(

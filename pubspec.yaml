@@ -66,9 +66,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-<<<<<<< HEAD
-  assets:
-    - PRIVACY_POLICY.md
-    - TERMS_OF_SERVICE.md
-=======
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3

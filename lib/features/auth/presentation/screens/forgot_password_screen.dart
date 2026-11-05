@@ -132,15 +132,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             isRecovery
                 ? 'Choose a strong new password for your account.'
                 : 'Enter your email and we will send you a secure reset link.',
-<<<<<<< HEAD
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
-=======
             style: Theme.of(
               context,
             ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),

@@ -18,31 +18,6 @@ final passwordRecoveryProvider = StateProvider<bool>((ref) => false);
 
 final authStateProvider =
     StateNotifierProvider<AuthNotifier, AsyncValue<AppUser?>>((ref) {
-<<<<<<< HEAD
-  return AuthNotifier(
-    ref.watch(authServiceProvider),
-    onPasswordRecovery: () {
-      ref.read(passwordRecoveryProvider.notifier).state = true;
-    },
-    onSignedOut: () {
-      ref.read(passwordRecoveryProvider.notifier).state = false;
-    },
-  );
-});
-
-class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
-  AuthNotifier(
-    this._authService, {
-    required void Function() onPasswordRecovery,
-    void Function()? onSignedOut,
-  }) : super(AsyncValue.data(_authService.getCurrentUser())) {
-    _authSubscription = _authService.authStateChanges.listen((authState) {
-      if (!mounted) return;
-      if (authState.event == AuthChangeEvent.passwordRecovery) {
-        onPasswordRecovery();
-      } else if (authState.event == AuthChangeEvent.signedOut) {
-        onSignedOut?.call();
-=======
       return AuthNotifier(
         ref.read(authServiceProvider),
         onPasswordRecovery: () {
@@ -57,7 +32,6 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     _authSubscription = _authService.authStateChanges.listen((authState) {
       if (authState.event == AuthChangeEvent.passwordRecovery) {
         onPasswordRecovery();
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
       }
       state = AsyncValue.data(_authService.getCurrentUser());
     });
@@ -113,14 +87,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
 
 // Convenience provider for current user
 final currentUserProvider = Provider<AppUser?>((ref) {
-<<<<<<< HEAD
-  return ref.watch(authStateProvider).maybeWhen(
-        data: (user) => user,
-        orElse: () => null,
-      );
-=======
   return ref
       .watch(authStateProvider)
       .maybeWhen(data: (user) => user, orElse: () => null);
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 });

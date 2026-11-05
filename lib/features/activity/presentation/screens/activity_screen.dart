@@ -132,12 +132,6 @@ class ActivityScreen extends ConsumerWidget {
                 },
               ),
             );
-<<<<<<< HEAD
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) =>
-              loadError('Could not load groups and currencies: $error'),
-=======
           }
 
           // Sort expenses by date (newest first)
@@ -224,7 +218,6 @@ class ActivityScreen extends ConsumerWidget {
               ),
             ],
           ),
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => loadError('Error loading activity: $error'),

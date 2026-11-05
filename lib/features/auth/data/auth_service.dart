@@ -31,69 +31,28 @@ class AuthService {
     required String password,
     required String name,
   }) async {
-<<<<<<< HEAD
-    final displayName = _validateDisplayName(name);
-    final response = await _client.auth.signUp(
-      email: email.trim().toLowerCase(),
-      password: password,
-      data: {'display_name': displayName},
-=======
     final response = await _client.auth.signUp(
       email: email.trim().toLowerCase(),
       password: password,
       data: {'display_name': name.trim()},
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
       emailRedirectTo: 'com.splitit://auth-callback/',
     );
     return response.session == null;
   }
 
   Future<AppUser> updateDisplayName(String name) async {
-<<<<<<< HEAD
-    final displayName = _validateDisplayName(name);
-    final previousUser = _client.auth.currentUser;
-    if (previousUser == null) {
-      throw const AuthException('Sign in before updating your name.');
-    }
-    // The schema's Auth metadata trigger synchronizes the public profile in
-    // this same transaction; clients must not write to profiles directly.
-    final response = await _client.auth.updateUser(
-      UserAttributes(data: {'display_name': displayName}),
-    );
-    final user = _mapUser(response.user);
-    if (user == null ||
-        user.uid != previousUser.id ||
-        user.displayName != displayName) {
-      throw const AuthException(
-          'Profile update did not return the expected user.');
-=======
     final response = await _client.auth.updateUser(
       UserAttributes(data: {'display_name': name.trim()}),
     );
     final user = _mapUser(response.user);
     if (user == null) {
       throw const AuthException('Profile update did not return a user.');
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
     }
     return user;
   }
 
-<<<<<<< HEAD
-  String _validateDisplayName(String name) {
-    final trimmed = name.trim();
-    if (trimmed.runes.isEmpty || trimmed.runes.length > 80) {
-      throw const AuthException(
-          'Display name must be between 1 and 80 characters.');
-    }
-    return trimmed;
-  }
-
   Future<void> signOut() => _client.auth.signOut();
 
-=======
-  Future<void> signOut() => _client.auth.signOut();
-
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   Future<void> sendPasswordResetEmail(String email) async {
     await _client.auth.resetPasswordForEmail(
       email.trim().toLowerCase(),

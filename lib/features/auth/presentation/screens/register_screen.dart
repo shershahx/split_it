@@ -59,14 +59,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     setState(() => _isLoading = true);
 
     try {
-<<<<<<< HEAD
-      final requiresConfirmation =
-          await ref.read(authStateProvider.notifier).registerWithEmail(
-                email: _emailController.text,
-                password: _passwordController.text,
-                name: _nameController.text,
-              );
-=======
       final requiresConfirmation = await ref
           .read(authStateProvider.notifier)
           .registerWithEmail(
@@ -74,7 +66,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             password: _passwordController.text,
             name: _nameController.text,
           );
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
       if (!mounted) return;
       if (requiresConfirmation) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -166,13 +157,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       labelText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outlined),
                       suffixIcon: IconButton(
-<<<<<<< HEAD
-                        icon: Icon(_obscurePassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined),
-                        onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword),
-=======
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_outlined
@@ -181,7 +165,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         onPressed: () => setState(
                           () => _obscurePassword = !_obscurePassword,
                         ),
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
                       ),
                     ),
                     validator: (value) {
@@ -210,13 +193,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       labelText: 'Confirm Password',
                       prefixIcon: const Icon(Icons.lock_outlined),
                       suffixIcon: IconButton(
-<<<<<<< HEAD
-                        icon: Icon(_obscureConfirmPassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined),
-                        onPressed: () => setState(() =>
-                            _obscureConfirmPassword = !_obscureConfirmPassword),
-=======
                         icon: Icon(
                           _obscureConfirmPassword
                               ? Icons.visibility_outlined
@@ -226,7 +202,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           () => _obscureConfirmPassword =
                               !_obscureConfirmPassword,
                         ),
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
                       ),
                     ),
                     validator: (value) {
@@ -256,19 +231,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     value: _agreedToTerms,
                     onChanged: (value) =>
                         setState(() => _agreedToTerms = value ?? false),
-<<<<<<< HEAD
-                    title: Text.rich(TextSpan(
-                      text: 'I agree to the ',
-                      children: [
-                        TextSpan(
-                          text: 'Terms & Conditions',
-                          style: TextStyle(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    )),
-=======
                     title: const Text.rich(
                       TextSpan(
                         text: 'I agree to the ',
@@ -283,7 +245,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ],
                       ),
                     ),
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
                     controlAffinity: ListTileControlAffinity.leading,
                     contentPadding: EdgeInsets.zero,
                   ),
@@ -296,12 +257,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ? const SizedBox(
                             height: 20,
                             width: 20,
-<<<<<<< HEAD
-                            child: CircularProgressIndicator(strokeWidth: 2))
-=======
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
                         : const Text('Create Account'),
                   ),
                   const SizedBox(height: 16),
@@ -310,13 +267,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-<<<<<<< HEAD
-                      Text('Already have an account? ',
-                          style: theme.textTheme.bodyMedium),
-                      TextButton(
-                          onPressed: () => context.pop(),
-                          child: const Text('Login')),
-=======
                       Text(
                         'Already have an account? ',
                         style: theme.textTheme.bodyMedium,
@@ -325,7 +275,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         onPressed: () => context.pop(),
                         child: const Text('Login'),
                       ),
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
                     ],
                   ),
                 ],

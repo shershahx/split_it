@@ -30,16 +30,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-<<<<<<< HEAD
-      await ref.read(authStateProvider.notifier).signInWithEmail(
-            _emailController.text,
-            _passwordController.text,
-          );
-=======
       await ref
           .read(authStateProvider.notifier)
           .signInWithEmail(_emailController.text, _passwordController.text);
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
       if (mounted) context.go('/groups');
     } catch (e) {
       if (mounted) {

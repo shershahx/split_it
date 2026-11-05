@@ -72,13 +72,8 @@ class Group extends Equatable {
   }) {
     return Group(
       id: const Uuid().v4(),
-<<<<<<< HEAD
-      name: name,
-      description: description,
-=======
       name: name.trim(),
       description: description?.trim(),
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
       imageUrl: imageUrl,
       createdBy: createdBy,
       createdAt: DateTime.now(),

@@ -1,13 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-<<<<<<< HEAD
-
-import '../../../core/services/cloud_db_service.dart';
-import '../../../shared/models/settlement.dart';
-import '../../auth/providers/auth_provider.dart';
-
-final settlementsRepositoryProvider = Provider<SettlementsRepository>((ref) {
-=======
 
 import '../../../core/services/financial_error.dart';
 import '../../../core/utils/money.dart';
@@ -16,7 +8,6 @@ import '../../auth/providers/auth_provider.dart';
 
 final settlementsRepositoryProvider =
     Provider.autoDispose<SettlementsRepository>((ref) {
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   return SettlementsRepository(ref.watch(supabaseClientProvider));
 });
 
@@ -31,34 +22,6 @@ class SettlementsRepository {
   SettlementsRepository(this._client);
 
   final SupabaseClient _client;
-<<<<<<< HEAD
-
-  Settlement _fromRow(Map<String, dynamic> row) => Settlement(
-        id: row['id'] as String,
-        groupId: row['group_id'] as String,
-        paidBy: row['paid_by'] as String,
-        paidTo: row['paid_to'] as String,
-        amount: CloudDbService.fromMinorUnits(row['amount_minor'] as num),
-        date: DateTime.parse(row['settled_at'] as String),
-        note: row['note'] as String?,
-      );
-
-  Future<List<Settlement>> getSettlements(String groupId) async {
-    final rows = await CloudDbService.readAll(
-        () => _client.from('settlements').select().eq('group_id', groupId));
-    final settlements = rows.map(_fromRow).toList();
-    settlements.sort((a, b) {
-      final date = b.date.compareTo(a.date);
-      return date != 0 ? date : b.id.compareTo(a.id);
-    });
-    return settlements;
-  }
-
-  Future<void> saveSettlement(Settlement settlement) async {
-    final amount = CloudDbService.toMinorUnits(settlement.amount);
-    if (amount <= 0 || settlement.paidBy == settlement.paidTo) {
-      throw ArgumentError('A positive payment to another member is required');
-=======
   static const pageSize = 20;
   static const _columns =
       'id,group_id,paid_by,paid_to,amount_minor,settled_at,note,created_by,created_at';
@@ -80,7 +43,6 @@ class SettlementsRepository {
   void _checkId(String id) {
     if (!_uuid.hasMatch(id)) {
       throw const FinancialFailure('This record has an invalid identifier.');
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
     }
     if (_client.auth.currentUser?.id != settlement.paidBy) {
       throw StateError('Only the current user can record their own payment');
@@ -96,19 +58,6 @@ class SettlementsRepository {
     });
   }
 
-<<<<<<< HEAD
-  Future<void> deleteSettlement(Settlement settlement) async {
-    await _client.from('settlements').delete().eq('id', settlement.id);
-  }
-
-  Future<Settlement?> getSettlementById(String settlementId) async {
-    final row = await _client
-        .from('settlements')
-        .select()
-        .eq('id', settlementId)
-        .maybeSingle();
-    return row == null ? null : _fromRow(row);
-=======
   /// Bounded history, not an input to financial balance calculations.
   Future<SettlementPage> getSettlementPage(String groupId,
       {int page = 0}) async {
@@ -198,6 +147,5 @@ class SettlementsRepository {
       'target_settlement_id': settlement.id,
     });
     _checkAccount(userId);
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   }
 }

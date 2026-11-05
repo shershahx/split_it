@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-<<<<<<< HEAD
-import '../../../../core/utils/money.dart';
-=======
 import '../../../../core/services/financial_error.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../shared/models/group.dart';
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 import '../../../../shared/models/settlement.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../groups/data/groups_repository.dart';
@@ -26,40 +22,6 @@ class SettleUpScreen extends ConsumerStatefulWidget {
 
 class _SettleUpScreenState extends ConsumerState<SettleUpScreen> {
   final _formKey = GlobalKey<FormState>();
-<<<<<<< HEAD
-  String? _selectedMember;
-  final _amountController = TextEditingController();
-  // A retry after a lost response must address the same backend record.
-  final _draftId = const Uuid().v4();
-  late final String? _draftUserId;
-  late final String _draftGroupId;
-  bool _draftStale = false;
-  bool _isLoading = false;
-  bool _saved = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _draftUserId = ref.read(currentUserProvider)?.uid;
-    _draftGroupId = widget.groupId;
-    ref.listenManual(currentUserProvider.select((user) => user?.uid), (_, uid) {
-      if (uid != _draftUserId && !_draftStale) {
-        setState(() => _draftStale = true);
-      }
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant SettleUpScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.groupId != _draftGroupId) _draftStale = true;
-  }
-
-  bool get _isCurrentDraft =>
-      !_draftStale &&
-      widget.groupId == _draftGroupId &&
-      ref.read(currentUserProvider)?.uid == _draftUserId;
-=======
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
   String? _selectedMember;
@@ -73,7 +35,6 @@ class _SettleUpScreenState extends ConsumerState<SettleUpScreen> {
     _pending = null;
     _pendingCurrency = null;
   }
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 
   @override
   void dispose() {
@@ -82,59 +43,6 @@ class _SettleUpScreenState extends ConsumerState<SettleUpScreen> {
     super.dispose();
   }
 
-<<<<<<< HEAD
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  Future<void> _settleUp() async {
-    if (_isLoading || _saved || !_isCurrentDraft) return;
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-    final user = ref.read(currentUserProvider);
-    final groupAsync = ref.read(groupProvider(widget.groupId));
-    final group = groupAsync.asData?.value;
-    if (user == null || groupAsync.isLoading || group == null) {
-      _showMessage('Sign in and wait for the group to load before saving');
-      return;
-    }
-
-    try {
-      final amount = Money.parseMinor(_amountController.text);
-      final recipient = _selectedMember ?? '';
-      Money.validateSettlementMinor(
-        currentUserId: user.uid,
-        paidBy: user.uid,
-        paidTo: recipient,
-        amount: amount,
-        memberIds: group.memberIds,
-      );
-      final settlement = Settlement(
-        id: _draftId,
-        groupId: widget.groupId,
-        paidBy: user.uid,
-        paidTo: recipient,
-        amount: Money.toMajor(amount),
-        date: DateTime.now(),
-        note: 'Settlement',
-      );
-      setState(() => _isLoading = true);
-      await ref
-          .read(settlementsNotifierProvider.notifier)
-          .saveSettlement(settlement);
-      if (!mounted || !_isCurrentDraft) return;
-      _saved = true;
-      ref.invalidate(settlementsProvider(widget.groupId));
-      ref.invalidate(groupsProvider);
-      ref.invalidate(groupProvider(widget.groupId));
-      if (ref.read(currentUserProvider)?.uid != user.uid) return;
-      _showMessage(
-          'Payment of ${Money.formatMinor(amount)} ${group.currency} recorded. No money was transferred.');
-      if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-    } catch (error) {
-      if (mounted && _isCurrentDraft) {
-        _showMessage('Failed to record payment: $error');
-=======
   String? _amountError(String? value) {
     try {
       if (Money.parseAmount(value?.trim() ?? '') <= 0) {
@@ -314,7 +222,6 @@ class _SettleUpScreenState extends ConsumerState<SettleUpScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(financialErrorMessage(error))));
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
       }
     } finally {
       if (mounted) setState(() => _busy = false);

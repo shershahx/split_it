@@ -1,15 +1,8 @@
 -- Split It database schema
-<<<<<<< HEAD
--- Run this entire file as the database owner in Supabase Dashboard > SQL Editor.
--- Atomic and rerunnable. Back up first; an existing reversed friendship duplicate
--- must be reconciled before the unique unordered-pair index can be created.
-begin;
-=======
 -- Run this entire file in Supabase Dashboard > SQL Editor.
 -- INITIAL BOOTSTRAP ONLY: then apply every file in migrations/ in order.
 -- On existing projects apply new migrations, not this bootstrap again.
 -- Rerunning this file alone restores obsolete membership/invitation policies.
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 
 create extension if not exists pgcrypto;
 
@@ -86,21 +79,6 @@ create table if not exists public.settlements (
   check (paid_by <> paid_to)
 );
 
-<<<<<<< HEAD
--- Keep these per-record limits aligned with Money.maxMinorUnits in Dart.
--- Revalidate existing data; never silently clamp a historical ledger amount.
-alter table public.expenses drop constraint if exists expenses_amount_minor_max;
-alter table public.expenses add constraint expenses_amount_minor_max
-  check (amount_minor <= 999999999999);
-alter table public.expense_splits drop constraint if exists expense_splits_amount_minor_max;
-alter table public.expense_splits add constraint expense_splits_amount_minor_max
-  check (amount_minor <= 999999999999);
-alter table public.settlements drop constraint if exists settlements_amount_minor_max;
-alter table public.settlements add constraint settlements_amount_minor_max
-  check (amount_minor <= 999999999999);
-
-=======
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 create table if not exists public.friendships (
   requester_id uuid not null references public.profiles(id) on delete cascade,
   addressee_id uuid not null references public.profiles(id) on delete cascade,
@@ -210,60 +188,6 @@ begin
 end;
 $$;
 
-<<<<<<< HEAD
--- Shared projection for signup, Auth updates, and missing-profile backfill.
--- Missing names use the email prefix (or User); explicitly invalid names never
--- silently fall back or truncate. PostgreSQL char_length counts Unicode codepoints.
-create or replace function public._profile_metadata(p_metadata jsonb, p_email text)
-returns table (display_name text, avatar_url text)
-language plpgsql immutable set search_path = '' as $$
-begin
-  p_metadata := coalesce(p_metadata, '{}'::jsonb);
-  if jsonb_typeof(p_metadata) is distinct from 'object' then
-    raise exception 'User metadata must be an object' using errcode = '22023';
-  end if;
-  if p_metadata ? 'display_name' then
-    if jsonb_typeof(p_metadata -> 'display_name') is distinct from 'string' then
-      raise exception 'Display name must be a string of 1 to 80 characters' using errcode = '22023';
-    end if;
-    display_name := p_metadata ->> 'display_name';
-  else
-    display_name := coalesce(nullif(split_part(p_email, '@', 1), ''), 'User');
-  end if;
-  display_name := regexp_replace(display_name, '^[[:space:]]+|[[:space:]]+$', '', 'g');
-  if char_length(display_name) not between 1 and 80 then
-    raise exception 'Display name must be between 1 and 80 characters' using errcode = '22023';
-  end if;
-  if p_metadata ? 'avatar_url'
-     and jsonb_typeof(p_metadata -> 'avatar_url') not in ('string', 'null') then
-    raise exception 'Avatar URL must be a string or null' using errcode = '22023';
-  end if;
-  avatar_url := p_metadata ->> 'avatar_url';
-  return next;
-end;
-$$;
-
--- The Auth write and this profile upsert share one transaction. Any validation
--- or profile-write failure aborts the Auth change too; clients must not dual-write
--- profiles or attempt a separate best-effort metadata rollback.
-=======
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
-create or replace function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer
-<<<<<<< HEAD
-set search_path = ''
-as $$
-begin
-  insert into public.profiles as p (id, display_name, avatar_url)
-  select new.id, m.display_name, m.avatar_url
-  from public._profile_metadata(new.raw_user_meta_data, new.email) m
-  on conflict (id) do update
-    set display_name = excluded.display_name, avatar_url = excluded.avatar_url
-    where p.display_name is distinct from excluded.display_name
-       or p.avatar_url is distinct from excluded.avatar_url;
-=======
 set search_path = public
 as $$
 begin
@@ -302,7 +226,6 @@ begin
     ),
     avatar_url = new.raw_user_meta_data ->> 'avatar_url'
   where id = new.id;
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   return new;
 end;
 $$;
@@ -365,8 +288,6 @@ begin
 end;
 $$;
 
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
-drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
@@ -382,7 +303,6 @@ create trigger on_auth_user_metadata_updated
 
 insert into public.profiles (id, display_name, avatar_url)
 select u.id, m.display_name, m.avatar_url
-from auth.users u
 cross join lateral public._profile_metadata(u.raw_user_meta_data, u.email) m
 where not exists (select 1 from public.profiles p where p.id = u.id)
 =======

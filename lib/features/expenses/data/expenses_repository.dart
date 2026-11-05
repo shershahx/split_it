@@ -1,12 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-<<<<<<< HEAD
-import '../../../core/services/cloud_db_service.dart';
-=======
 import '../../../core/services/financial_error.dart';
 import '../../../core/utils/money.dart';
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 import '../../../shared/models/expense.dart';
 import '../../auth/providers/auth_provider.dart';
 
@@ -22,99 +18,6 @@ class ExpensePage {
 
 class ExpensesRepository {
   ExpensesRepository(this._client);
-<<<<<<< HEAD
-
-  final SupabaseClient _client;
-
-  Expense _fromRow(Map<String, dynamic> row) {
-    final amount = row['amount_minor'] as num;
-    final splitRows = row['expense_splits'] as List;
-    final majorAmount = CloudDbService.fromMinorUnits(amount);
-    var remaining = amount.toInt();
-    final split = <String, double>{};
-    for (final entry in splitRows) {
-      final userId = entry['user_id'] as String;
-      final minor = entry['amount_minor'] as num;
-      final major = CloudDbService.fromMinorUnits(minor);
-      if (minor < 0 || minor > remaining || split.containsKey(userId)) {
-        throw const FormatException('Invalid or incomplete expense splits');
-      }
-      remaining -= minor.toInt();
-      split[userId] = major;
-    }
-    if (amount <= 0 || split.isEmpty || remaining != 0) {
-      throw const FormatException('Invalid or incomplete expense splits');
-    }
-    return Expense(
-      id: row['id'] as String,
-      groupId: row['group_id'] as String,
-      description: row['description'] as String,
-      amount: majorAmount,
-      paidBy: row['paid_by'] as String,
-      date: DateTime.parse(row['expense_date'] as String),
-      split: split,
-      imageUrl: row['receipt_path'] as String?,
-      createdBy: row['created_by'] as String,
-    );
-  }
-
-  Future<List<Expense>> getExpenses(String groupId) async {
-    // The view aggregates splits inside SQL, outside nested-resource row caps.
-    final rows = await CloudDbService.readAll(
-        () => _client.from('expense_records').select().eq('group_id', groupId));
-    final expenses = rows.map(_fromRow).toList();
-    expenses.sort((a, b) {
-      final date = b.date.compareTo(a.date);
-      return date != 0 ? date : b.id.compareTo(a.id);
-    });
-    return expenses;
-  }
-
-  /// Replaces the expense and all splits in one database transaction.
-  Future<void> saveExpense(Expense expense) async {
-    final amount = CloudDbService.toMinorUnits(expense.amount);
-    final splits = [
-      for (final entry in expense.split.entries)
-        {
-          'user_id': entry.key,
-          'amount_minor': CloudDbService.toMinorUnits(entry.value),
-        },
-    ];
-    final total = splits.fold<int>(
-      0,
-      (sum, split) => sum + (split['amount_minor'] as int),
-    );
-    if (amount <= 0 ||
-        splits.isEmpty ||
-        splits.any((split) => (split['amount_minor'] as int) < 0) ||
-        total != amount) {
-      throw ArgumentError('Nonnegative splits must sum to the positive amount');
-    }
-    await _client.rpc('save_expense', params: {
-      'p_id': expense.id,
-      'p_group_id': expense.groupId,
-      'p_description': expense.description,
-      'p_amount_minor': amount,
-      'p_paid_by': expense.paidBy,
-      'p_expense_date': expense.date.toUtc().toIso8601String(),
-      'p_receipt_path': expense.imageUrl,
-      'p_created_by': expense.createdBy,
-      'p_splits': splits,
-    });
-  }
-
-  Future<void> deleteExpense(Expense expense) async {
-    await _client.from('expenses').delete().eq('id', expense.id);
-  }
-
-  Future<Expense?> getExpenseById(String expenseId) async {
-    final row = await _client
-        .from('expense_records')
-        .select()
-        .eq('id', expenseId)
-        .maybeSingle();
-    return row == null ? null : _fromRow(row);
-=======
   final SupabaseClient _client;
   static const pageSize = 20;
   static const _columns =
@@ -252,6 +155,5 @@ class ExpensesRepository {
       throw const FinancialFailure('Could not verify the group balances.');
     }
     return Map.unmodifiable(balances);
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   }
 }
