@@ -24,18 +24,10 @@ import '../../features/account/presentation/screens/settings_screen.dart';
 import '../../features/settle/presentation/screens/settle_up_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-<<<<<<< HEAD
-  final refresh = ValueNotifier<int>(0);
-  ref.listen(authStateProvider, (_, __) => refresh.value++);
-  ref.listen(passwordRecoveryProvider, (_, __) => refresh.value++);
-
-  final router = GoRouter(
-=======
   final authState = ref.watch(authStateProvider);
   final isPasswordRecovery = ref.watch(passwordRecoveryProvider);
 
   return GoRouter(
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
     initialLocation: '/',
     refreshListenable: refresh,
     redirect: (context, state) {
@@ -50,12 +42,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         orElse: () => false,
       );
 
-<<<<<<< HEAD
-      final isLoggingIn = state.matchedLocation == '/login' ||
-=======
       final isLoggingIn =
           state.matchedLocation == '/login' ||
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
           state.matchedLocation == '/register' ||
           state.matchedLocation == '/forgot-password';
       final isSplash = state.matchedLocation == '/';

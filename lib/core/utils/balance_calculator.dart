@@ -27,68 +27,15 @@ class SimplifiedDebt {
 /// [Money.maxMinorUnits] as their individual limit. Reports beyond the aggregate
 /// limit fail explicitly rather than returning imprecise double-valued totals.
 class BalanceCalculator {
-<<<<<<< HEAD
-  static int _addMinor(int left, int right) {
-    final sum = left + right;
-    Money.toMajorAggregate(sum);
-    return sum;
-  }
-
-  /// Pairwise balances, not debt-simplified balances. All inputs must use the
-  /// same currency. Historical double-valued shares are quantized to cents.
-=======
   /// Other user ID -> net amount in the app's two-decimal currency.
   /// Positive means they owe [currentUserId]; negative means the user owes them.
   /// Invalid records throw [ArgumentError], including records unrelated to the
   /// current user. Self-payments have no effect, but are still validated.
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   static Map<String, double> calculateNetBalances({
     required String currentUserId,
     required List<Expense> expenses,
     required List<Settlement> settlements,
   }) {
-<<<<<<< HEAD
-    final balances = _netBalancesMinor(
-      currentUserId: currentUserId,
-      expenses: expenses,
-      settlements: settlements,
-    );
-    return balances
-        .map((id, amount) => MapEntry(id, Money.toMajorAggregate(amount)));
-  }
-
-  static Map<String, int> _netBalancesMinor({
-    required String currentUserId,
-    required List<Expense> expenses,
-    required List<Settlement> settlements,
-  }) {
-    final balances = <String, int>{};
-    void apply(String creditor, String debtor, int amount) {
-      if (creditor == debtor) return;
-      if (creditor == currentUserId) {
-        balances[debtor] = _addMinor(balances[debtor] ?? 0, amount);
-      } else if (debtor == currentUserId) {
-        balances[creditor] = _addMinor(balances[creditor] ?? 0, -amount);
-      }
-    }
-
-    for (final expense in expenses) {
-      for (final share in expense.split.entries) {
-        apply(expense.paidBy, share.key, Money.toMinor(share.value));
-      }
-    }
-    for (final settlement in settlements) {
-      // Paying increases the payer's net position; receiving decreases it.
-      apply(settlement.paidBy, settlement.paidTo,
-          Money.toMinor(settlement.amount));
-    }
-    balances.removeWhere((_, amount) => amount == 0);
-    return balances;
-  }
-
-  /// Greedy matching reduces transactions; it is not guaranteed to find the
-  /// global minimum number. Include only expenses/settlements of one currency.
-=======
     return _netBalances(
       currentUserId,
       expenses,
@@ -120,62 +67,11 @@ class BalanceCalculator {
   /// This reduces transfers but does not guarantee the mathematical minimum.
   /// Historical participants absent from [memberIds] are retained. An empty
   /// member list is valid; blank or duplicate member IDs are not.
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   static List<SimplifiedDebt> simplifyDebts({
     required List<Expense> expenses,
     required List<Settlement> settlements,
     required List<String> memberIds,
   }) {
-<<<<<<< HEAD
-    final net = {for (final id in memberIds) id: 0};
-    void apply(String creditor, String debtor, int amount) {
-      if (creditor == debtor) return;
-      // Preserve balances for former members referenced by historical records.
-      net[creditor] = _addMinor(net[creditor] ?? 0, amount);
-      net[debtor] = _addMinor(net[debtor] ?? 0, -amount);
-    }
-
-    for (final expense in expenses) {
-      for (final share in expense.split.entries) {
-        apply(expense.paidBy, share.key, Money.toMinor(share.value));
-      }
-    }
-    for (final settlement in settlements) {
-      apply(settlement.paidBy, settlement.paidTo,
-          Money.toMinor(settlement.amount));
-    }
-
-    int descending(MapEntry<String, int> a, MapEntry<String, int> b) {
-      final byAmount = b.value.compareTo(a.value);
-      return byAmount != 0 ? byAmount : a.key.compareTo(b.key);
-    }
-
-    final creditors = net.entries.where((e) => e.value > 0).toList()
-      ..sort(descending);
-    final debtors = net.entries
-        .where((e) => e.value < 0)
-        .map((e) => MapEntry(e.key, -e.value))
-        .toList()
-      ..sort(descending);
-    final debts = <SimplifiedDebt>[];
-    var creditorIndex = 0;
-    var debtorIndex = 0;
-    while (creditorIndex < creditors.length && debtorIndex < debtors.length) {
-      final creditor = creditors[creditorIndex];
-      final debtor = debtors[debtorIndex];
-      final amount =
-          creditor.value < debtor.value ? creditor.value : debtor.value;
-      debts.add(SimplifiedDebt(
-        from: debtor.key,
-        to: creditor.key,
-        amount: Money.toMajorAggregate(amount),
-      ));
-      creditors[creditorIndex] =
-          MapEntry(creditor.key, creditor.value - amount);
-      debtors[debtorIndex] = MapEntry(debtor.key, debtor.value - amount);
-      if (creditors[creditorIndex].value == 0) creditorIndex++;
-      if (debtors[debtorIndex].value == 0) debtorIndex++;
-=======
     final net = {for (final id in Money.sortedMemberIds(memberIds)) id: 0};
     _forEachTransfer(expenses, settlements, (debtor, creditor, units) {
       net[creditor] = Money.add(net[creditor] ?? 0, units);
@@ -215,29 +111,16 @@ class BalanceCalculator {
       if (debt == 0 && ++d < debtors.length) {
         debt = debtors[d].value;
       }
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
     }
     return debts;
   }
 
-<<<<<<< HEAD
-  /// Positive = owed to user; negative = user owes. Sum cents, not doubles.
-=======
   /// Positive = net owed to user; negative = net user owes.
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   static double totalBalance({
     required String currentUserId,
     required List<Expense> expenses,
     required List<Settlement> settlements,
   }) {
-<<<<<<< HEAD
-    final balances = _netBalancesMinor(
-      currentUserId: currentUserId,
-      expenses: expenses,
-      settlements: settlements,
-    );
-    return Money.toMajorAggregate(balances.values.fold<int>(0, _addMinor));
-=======
     final balances = _netBalances(currentUserId, expenses, settlements);
     final units = balances.values.fold<int>(0, Money.add);
     return Money.fromMinorUnits(units);
@@ -267,6 +150,5 @@ class BalanceCalculator {
         visit(settlement.paidTo, settlement.paidBy, units);
       }
     }
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
   }
 }
