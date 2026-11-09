@@ -49,7 +49,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
 
     try {
       final group = Group(
-        id: Uuid().v4(),
+        id: const Uuid().v4(),
         name: _nameController.text.trim(),
         createdBy: user.uid,
         createdAt: DateTime.now(),

@@ -135,8 +135,8 @@ class FriendDetailScreen extends ConsumerWidget {
                           padding: const EdgeInsets.all(16),
                           child: Text(
                             data.balances[currency]! > 0
-                                ? '$name owes you $currency ${Money.formatMinorUnits(Money.toMinorUnits(data.balances[currency]!).abs())}'
-                                : 'You owe $name $currency ${Money.formatMinorUnits(Money.toMinorUnits(data.balances[currency]!).abs())}',
+                                ? '$name owes you $currency ${Money.formatMinorUnits(Money.toMinorUnits(data.balances[currency]!.abs()))}'
+                                : 'You owe $name $currency ${Money.formatMinorUnits(Money.toMinorUnits(data.balances[currency]!.abs()))}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: data.balances[currency]! > 0

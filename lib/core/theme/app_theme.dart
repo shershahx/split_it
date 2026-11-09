@@ -144,7 +144,7 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surfaceLight,
-        selectedColor: AppColors.primary.withOpacity(0.15),
+        selectedColor: AppColors.primary.withValues(alpha: 0.15),
         labelStyle: GoogleFonts.inter(fontSize: 14),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         shape: RoundedRectangleBorder(
@@ -293,7 +293,7 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surfaceDark,
-        selectedColor: AppColors.primary.withOpacity(0.3),
+        selectedColor: AppColors.primary.withValues(alpha: 0.3),
         labelStyle: GoogleFonts.inter(fontSize: 14, color: AppColors.textPrimaryDark),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         shape: RoundedRectangleBorder(

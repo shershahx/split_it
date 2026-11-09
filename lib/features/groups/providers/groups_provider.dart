@@ -30,7 +30,7 @@ final groupInvitesProvider =
 });
 
 final groupProvider =
-    FutureProvider.autoDispose.family<Group?, String>((ref, groupId) async {
+    FutureProvider.family<Group?, String>((ref, groupId) async {
   final userId = ref.watch(currentUserProvider.select((user) => user?.uid));
   if (userId == null) return null;
   return ref.watch(groupsRepositoryProvider).getGroup(groupId);
