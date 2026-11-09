@@ -23,11 +23,16 @@ import '../../features/account/presentation/screens/profile_screen.dart';
 import '../../features/account/presentation/screens/settings_screen.dart';
 import '../../features/settle/presentation/screens/settle_up_screen.dart';
 
-final appRouterProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
-  final isPasswordRecovery = ref.watch(passwordRecoveryProvider);
+class _RouterRefreshNotifier extends ChangeNotifier {
+  void refresh() => notifyListeners();
+}
 
-  return GoRouter(
+final appRouterProvider = Provider<GoRouter>((ref) {
+  final refresh = _RouterRefreshNotifier();
+  ref.listen(authStateProvider, (_, __) => refresh.refresh());
+  ref.listen(passwordRecoveryProvider, (_, __) => refresh.refresh());
+
+  final router = GoRouter(
     initialLocation: '/',
     refreshListenable: refresh,
     redirect: (context, state) {
@@ -215,6 +220,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) =>
         Scaffold(body: Center(child: Text('Page not found: ${state.uri}'))),
   );
+
   ref.onDispose(() {
     router.dispose();
     refresh.dispose();

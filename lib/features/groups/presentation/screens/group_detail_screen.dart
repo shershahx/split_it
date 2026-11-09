@@ -5,7 +5,6 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/money.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../expenses/providers/expenses_provider.dart';
-import '../../../friends/providers/friends_provider.dart';
 import '../../../settle/providers/settlements_provider.dart';
 import '../../data/groups_repository.dart';
 import '../../providers/groups_provider.dart';

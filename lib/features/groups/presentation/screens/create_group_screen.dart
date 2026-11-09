@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../shared/models/group.dart';
 import '../../../auth/providers/auth_provider.dart';
@@ -48,12 +49,11 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
 
     try {
       final group = Group(
-        id: const Uuid().v4(),
+        id: Uuid().v4(),
         name: _nameController.text.trim(),
         createdBy: user.uid,
         createdAt: DateTime.now(),
         memberIds: [user.uid],
-        currency: _currencyController.text.trim().toUpperCase(),
         description: _descriptionController.text.trim().isEmpty
             ? null
             : _descriptionController.text.trim(),
@@ -133,7 +133,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                initialValue: _currency,
+                value: _currency,
                 decoration: const InputDecoration(
                   labelText: 'Group currency',
                   helperText:

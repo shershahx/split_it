@@ -9,19 +9,6 @@ import '../../providers/groups_provider.dart';
 class GroupsScreen extends ConsumerWidget {
   const GroupsScreen({super.key});
 
-  Future<void> _refresh(BuildContext context, WidgetRef ref) async {
-    try {
-      ref.invalidate(groupsProvider);
-      await ref.read(groupsProvider.future);
-    } catch (error) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to refresh groups: $error')),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final groupsAsync = ref.watch(groupsProvider);
@@ -123,9 +110,6 @@ class GroupsScreen extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
-                        trailing: const Icon(Icons.chevron_right),
-                        onTap: () =>
-                            context.push('${AppRoutes.groups}/${group.id}'),
                       ),
                     ),
                     title: Text(

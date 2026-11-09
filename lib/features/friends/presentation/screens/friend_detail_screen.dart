@@ -135,8 +135,8 @@ class FriendDetailScreen extends ConsumerWidget {
                           padding: const EdgeInsets.all(16),
                           child: Text(
                             data.balances[currency]! > 0
-                                ? '$name owes you $currency ${Money.formatMinor(Money.toMinor(data.balances[currency]!).abs())}'
-                                : 'You owe $name $currency ${Money.formatMinor(Money.toMinor(data.balances[currency]!).abs())}',
+                                ? '$name owes you $currency ${Money.formatMinorUnits(Money.toMinorUnits(data.balances[currency]!).abs())}'
+                                : 'You owe $name $currency ${Money.formatMinorUnits(Money.toMinorUnits(data.balances[currency]!).abs())}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: data.balances[currency]! > 0
@@ -163,7 +163,7 @@ class FriendDetailScreen extends ConsumerWidget {
                           subtitle: Text(
                               '${shared.groupName} · ${DateFormat.yMMMd().format(shared.expense.date)}'),
                           trailing: Text(
-                              '${shared.currency} ${Money.formatMinor(Money.toMinor(shared.expense.amount))}'),
+                              '${shared.currency} ${Money.formatMinorUnits(Money.toMinorUnits(shared.expense.amount))}'),
                           onTap: () => context
                               .push(AppRoutes.expenseDetail(shared.expense.id)),
                         )),

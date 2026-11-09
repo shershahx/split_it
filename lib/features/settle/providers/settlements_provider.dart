@@ -32,14 +32,12 @@ final settlementsProvider = FutureProvider.autoDispose
 });
 
 class SettlementsNotifier extends StateNotifier<AsyncValue<void>> {
-  SettlementsNotifier(this._repository, {this.onChanged})
-      : super(const AsyncValue.data(null));
+  SettlementsNotifier(this._repository, [void Function(String)? onSaved])
+      : _onSaved = onSaved ?? ((_) {}),
+        super(const AsyncValue.data(null));
 
   final SettlementsRepository _repository;
   final void Function(String) _onSaved;
-
-  SettlementsNotifier(this._repository, this._onSaved)
-      : super(const AsyncValue.data(null));
 
   Future<void> saveSettlement(Settlement settlement) async {
     if (state.isLoading) return;

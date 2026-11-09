@@ -178,7 +178,7 @@ void main() {
           'member_ids': [_alice, _bob],
         }
       ];
-      final groups = await GroupsRepository(client).getGroups(_alice);
+      final groups = await GroupsRepository(client).getGroups();
       expect(groups.single.memberIds, [_alice, _bob]);
       expect(groups.single.createdAt, _date);
       expect(requests.first.uri.path, '/rest/v1/group_records');
@@ -274,7 +274,7 @@ void main() {
             'member_ids': i == 1 ? members : [_alice]
           },
       ];
-      final groups = await GroupsRepository(client).getGroups(_alice);
+      final groups = await GroupsRepository(client).getGroups();
       expect(groups.length, 205);
       expect(groups.first.id, id(205));
       expect(groups.last.memberIds, members);

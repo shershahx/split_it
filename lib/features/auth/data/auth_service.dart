@@ -41,12 +41,20 @@ class AuthService {
   }
 
   Future<AppUser> updateDisplayName(String name) async {
+    final currentUserId = _client.auth.currentUser?.id;
+    if (currentUserId == null) {
+      throw const AuthException('Sign in before updating your name.');
+    }
+    final trimmed = name.trim();
+    if (trimmed.isEmpty || trimmed.runes.length > 80) {
+      throw const AuthException('Display name must be between 1 and 80 characters.');
+    }
     final response = await _client.auth.updateUser(
-      UserAttributes(data: {'display_name': name.trim()}),
+      UserAttributes(data: {'display_name': trimmed}),
     );
     final user = _mapUser(response.user);
-    if (user == null) {
-      throw const AuthException('Profile update did not return a user.');
+    if (user == null || user.uid != currentUserId) {
+      throw const AuthException('Profile update did not return the expected user.');
     }
     return user;
   }

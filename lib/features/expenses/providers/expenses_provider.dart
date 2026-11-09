@@ -46,3 +46,42 @@ final allUserExpensesProvider =
   if (userId == null) return [];
   throw UnsupportedError('Cross-group expense activity is not connected yet.');
 });
+
+class ExpensesNotifier extends StateNotifier<AsyncValue<void>> {
+  ExpensesNotifier(this._repository) : super(const AsyncValue.data(null));
+
+  final ExpensesRepository _repository;
+
+  Future<void> saveExpense(Expense expense) async {
+    if (state.isLoading) return;
+    state = const AsyncValue.loading();
+    try {
+      await _repository.saveExpense(expense);
+      if (!mounted) return;
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      if (mounted) state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+
+  Future<void> deleteExpense(Expense expense) async {
+    if (state.isLoading) return;
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteExpense(expense);
+      if (!mounted) return;
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      if (mounted) state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+}
+
+final expensesNotifierProvider =
+    StateNotifierProvider.autoDispose<ExpensesNotifier, AsyncValue<void>>(
+        (ref) {
+  ref.watch(currentUserProvider.select((user) => user?.uid));
+  return ExpensesNotifier(ref.watch(expensesRepositoryProvider));
+});

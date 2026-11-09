@@ -107,7 +107,7 @@ class _SettleUpScreenState extends ConsumerState<SettleUpScreen> {
                         const SizedBox(height: 24),
                         DropdownButtonFormField<String>(
                           key: ValueKey('${user.uid}:$selected'),
-                          initialValue: selected,
+                          value: selected,
                           decoration:
                               const InputDecoration(labelText: 'Paid to'),
                           items: members
@@ -228,129 +228,5 @@ class _SettleUpScreenState extends ConsumerState<SettleUpScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider);
-    final groupAsync = ref.watch(groupProvider(widget.groupId));
-
-    return PopScope(
-      canPop: !_isLoading,
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Settle Up')),
-        body: !_isCurrentDraft
-            ? const Center(
-                child: Text(
-                    'Account or group changed. Reopen this form to start a new draft.'))
-            : currentUser == null
-                ? const Center(child: Text('Sign in to record a payment'))
-                : groupAsync.when(
-                    skipLoadingOnRefresh: false,
-                    data: (group) {
-                      if (group == null) {
-                        return const Center(child: Text('Group not found'));
-                      }
-                      final members = group.memberIds;
-                      if (members.isEmpty ||
-                          members.any((id) => id.trim().isEmpty) ||
-                          members.toSet().length != members.length ||
-                          !members.contains(currentUser.uid)) {
-                        return const Center(
-                            child:
-                                Text('A valid group membership is required'));
-                      }
-                      final recipients =
-                          members.where((id) => id != currentUser.uid).toList();
-                      if (recipients.isEmpty) {
-                        return const Center(
-                            child: Text('No other members in this group'));
-                      }
-                      return AbsorbPointer(
-                        absorbing: _isLoading || _saved,
-                        child: Form(
-                          key: _formKey,
-                          child: SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                const Text(
-                                    'Record a payment you have already made to another group member. This does not transfer money.'),
-                                const SizedBox(height: 16),
-                                DropdownButtonFormField<String>(
-                                  initialValue:
-                                      recipients.contains(_selectedMember)
-                                          ? _selectedMember
-                                          : null,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Paid To',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  items: recipients
-                                      .map((id) => DropdownMenuItem(
-                                          value: id, child: Text(id)))
-                                      .toList(),
-                                  onChanged: (value) =>
-                                      setState(() => _selectedMember = value),
-                                  validator: (value) => recipients
-                                          .contains(value)
-                                      ? null
-                                      : 'Select another current group member',
-                                ),
-                                const SizedBox(height: 16),
-                                TextFormField(
-                                  controller: _amountController,
-                                  decoration: InputDecoration(
-                                    labelText: 'Amount',
-                                    hintText: '0.00',
-                                    suffixText: group.currency,
-                                    border: const OutlineInputBorder(),
-                                  ),
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          decimal: true),
-                                  validator: (value) {
-                                    final amount =
-                                        Money.tryParseMinor(value ?? '');
-                                    return amount == null || amount <= 0
-                                        ? 'Enter a positive amount with at most 2 decimals'
-                                        : null;
-                                  },
-                                ),
-                                const SizedBox(height: 24),
-                                ElevatedButton(
-                                  onPressed:
-                                      _isLoading || _saved ? null : _settleUp,
-                                  child: _isLoading
-                                      ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                              strokeWidth: 2))
-                                      : const Text('Record Settlement'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (error, _) => Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Unable to load group: $error'),
-                          TextButton(
-                            onPressed: () =>
-                                ref.invalidate(groupProvider(widget.groupId)),
-                            child: const Text('Retry'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-      ),
-    );
-  }
 }
+

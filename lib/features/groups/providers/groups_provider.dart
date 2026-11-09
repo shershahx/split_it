@@ -35,3 +35,19 @@ final groupProvider =
   if (userId == null) return null;
   return ref.watch(groupsRepositoryProvider).getGroup(groupId);
 });
+
+class GroupsNotifier extends StateNotifier<AsyncValue<void>> {
+  GroupsNotifier(this._repository) : super(const AsyncValue.data(null));
+
+  final GroupsRepository _repository;
+
+  Future<void> addMember(String groupId, String memberId) async {
+    await _repository.addMember(groupId, memberId);
+  }
+}
+
+final groupsNotifierProvider =
+    StateNotifierProvider.autoDispose<GroupsNotifier, AsyncValue<void>>((ref) {
+  ref.watch(currentUserProvider.select((user) => user?.uid));
+  return GroupsNotifier(ref.watch(groupsRepositoryProvider));
+});

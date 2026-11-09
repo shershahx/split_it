@@ -13,6 +13,14 @@ class GroupPage {
   final bool hasNext;
 
   const GroupPage({required this.groups, required this.hasNext});
+
+  bool get isEmpty => groups.isEmpty;
+  bool get isNotEmpty => groups.isNotEmpty;
+  int get length => groups.length;
+  Group get single => groups.single;
+  Group get first => groups.first;
+  Group get last => groups.last;
+  Iterable<T> map<T>(T Function(Group) f) => groups.map(f);
 }
 
 class GroupInvite {
@@ -72,6 +80,17 @@ class GroupsRepository {
       groups: List.unmodifiable(rows.take(pageSize).map(Group.fromMap)),
       hasNext: rows.length > pageSize,
     );
+  }
+
+  Future<void> updateGroup(Group group) async {
+    await _client.rpc('update_group', params: group.toMap());
+  }
+
+  Future<void> addMember(String groupId, String memberId) async {
+    await _client.rpc('add_group_member', params: {
+      'p_group_id': groupId,
+      'p_member_id': memberId,
+    });
   }
 
   Future<void> createGroup(Group group) async {

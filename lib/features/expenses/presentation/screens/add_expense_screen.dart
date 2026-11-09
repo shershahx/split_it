@@ -168,7 +168,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                   DropdownButtonFormField<String>(
                     key: ValueKey(
                         '$userId:${group.memberIds.join(',')}:$_payer'),
-                    initialValue:
+                    value:
                         group.memberIds.contains(_payer) ? _payer : userId,
                     decoration: const InputDecoration(labelText: 'Paid by'),
                     items: group.members

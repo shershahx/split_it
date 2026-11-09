@@ -11,6 +11,7 @@ import 'package:split_it/features/friends/presentation/screens/add_friend_screen
 import 'package:split_it/features/friends/presentation/screens/friend_detail_screen.dart';
 import 'package:split_it/features/friends/presentation/screens/friends_screen.dart';
 import 'package:split_it/features/friends/providers/friends_provider.dart';
+import 'package:split_it/features/groups/data/groups_repository.dart';
 import 'package:split_it/features/groups/providers/groups_provider.dart';
 import 'package:split_it/features/settle/providers/settlements_provider.dart';
 import 'package:split_it/shared/models/app_user.dart';
@@ -105,7 +106,7 @@ List<Override> _overrides(_Repository repository) => [
       currentUserProvider.overrideWith((ref) => ref.watch(_session)),
       friendsRepositoryProvider.overrideWithValue(repository),
       groupsProvider.overrideWith(
-          (ref) async => [_group('eur', 'EUR'), _group('usd', 'USD')]),
+          (ref) async => GroupPage(groups: [_group('eur', 'EUR'), _group('usd', 'USD')], hasNext: false)),
       expensesProvider.overrideWith((ref, groupId) async => groupId == 'eur'
           ? [
               _expense('Dinner', groupId, 'a', {'a': 10, 'b': 20}),

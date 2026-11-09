@@ -14,6 +14,14 @@ class ExpensePage {
   final List<Expense> expenses;
   final bool hasNext;
   const ExpensePage({required this.expenses, required this.hasNext});
+
+  bool get isEmpty => expenses.isEmpty;
+  bool get isNotEmpty => expenses.isNotEmpty;
+  int get length => expenses.length;
+  Expense get single => expenses.single;
+  Expense get first => expenses.first;
+  Expense get last => expenses.last;
+  Iterable<T> map<T>(T Function(Expense) f) => expenses.map(f);
 }
 
 class ExpensesRepository {

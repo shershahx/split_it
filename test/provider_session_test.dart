@@ -84,8 +84,10 @@ class _GroupsRepository implements GroupsRepository {
   final _Backend backend;
 
   @override
-  Future<List<Group>> getGroups(String userId) =>
-      backend.read('groups', [backend.accounts[userId]!.group]);
+  Future<GroupPage> getGroups({int page = 0}) async {
+    final list = await backend.read('groups', [backend.current.group]);
+    return GroupPage(groups: list, hasNext: false);
+  }
 
   @override
   Future<Group?> getGroup(String groupId) =>
@@ -100,8 +102,10 @@ class _ExpensesRepository implements ExpensesRepository {
   final _Backend backend;
 
   @override
-  Future<List<Expense>> getExpenses(String groupId) =>
-      backend.read('expenses', List.of(backend.current.expenses));
+  Future<ExpensePage> getExpenses(String groupId, {int page = 0}) async {
+    final list = await backend.read('expenses', List.of(backend.current.expenses));
+    return ExpensePage(expenses: list, hasNext: false);
+  }
 
   @override
   Future<Expense?> getExpenseById(String expenseId) => backend.read(

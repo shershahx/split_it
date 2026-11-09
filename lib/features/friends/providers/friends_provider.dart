@@ -110,7 +110,7 @@ final _friendsLedgerProvider = FutureProvider<List<_GroupLedger>>((ref) async {
   // An obsolete async build must not register dependencies in the new session.
   if (!active || ref.read(currentUserProvider)?.uid != user.uid) return [];
   return Future.wait(
-      groups.where((g) => g.memberIds.contains(user.uid)).map((group) {
+      groups.groups.where((g) => g.memberIds.contains(user.uid)).map((group) {
     final expenses = ref.watch(expensesProvider(group.id).future);
     final settlements = ref.watch(settlementsProvider(group.id).future);
     return Future.wait<Object>([expenses, settlements]).then((values) =>

@@ -44,18 +44,6 @@ class SettlementsRepository {
     if (!_uuid.hasMatch(id)) {
       throw const FinancialFailure('This record has an invalid identifier.');
     }
-    if (_client.auth.currentUser?.id != settlement.paidBy) {
-      throw StateError('Only the current user can record their own payment');
-    }
-    await _client.rpc('save_settlement', params: {
-      'p_id': settlement.id,
-      'p_group_id': settlement.groupId,
-      'p_paid_by': settlement.paidBy,
-      'p_paid_to': settlement.paidTo,
-      'p_amount_minor': amount,
-      'p_settled_at': settlement.date.toUtc().toIso8601String(),
-      'p_note': settlement.note,
-    });
   }
 
   /// Bounded history, not an input to financial balance calculations.

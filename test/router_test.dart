@@ -11,6 +11,7 @@ import 'package:split_it/features/auth/presentation/screens/login_screen.dart';
 import 'package:split_it/features/auth/presentation/screens/register_screen.dart';
 import 'package:split_it/features/auth/presentation/screens/splash_screen.dart';
 import 'package:split_it/features/auth/providers/auth_provider.dart';
+import 'package:split_it/features/groups/data/groups_repository.dart';
 import 'package:split_it/features/groups/presentation/screens/groups_screen.dart';
 import 'package:split_it/features/groups/providers/groups_provider.dart';
 import 'package:split_it/features/home/presentation/screens/home_screen.dart';
@@ -69,7 +70,7 @@ class _Harness {
   _Harness(AsyncValue<AppUser?> initialState) {
     container = ProviderContainer(overrides: [
       authStateProvider.overrideWith((ref) => _TestAuthNotifier(initialState)),
-      groupsProvider.overrideWith((ref) async => []),
+      groupsProvider.overrideWith((ref) async => const GroupPage(groups: [], hasNext: false)),
       // Any accidental access to production auth/backend dependencies must fail.
       supabaseClientProvider.overrideWith((ref) {
         throw StateError('Router tests must not access Supabase');

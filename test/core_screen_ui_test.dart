@@ -147,7 +147,8 @@ Future<ProviderContainer> _mount(
       }),
       groupsProvider.overrideWith((ref) async {
         count('groups');
-        return loadGroups == null ? [_group] : await loadGroups();
+        final list = loadGroups == null ? [_group] : await loadGroups();
+        return GroupPage(groups: list, hasNext: false);
       }),
       singleExpenseProvider('e').overrideWith((ref) async {
         count('single');

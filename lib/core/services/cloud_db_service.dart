@@ -8,12 +8,11 @@ final cloudDbServiceProvider = Provider<CloudDbService>((ref) {
   return CloudDbService(ref.watch(supabaseClientProvider));
 });
 
-<<<<<<< HEAD
 /// Shared database boundary; repositories use the injected Supabase client.
 class CloudDbService {
-  CloudDbService(this.client);
+  CloudDbService([this.client]);
 
-  final SupabaseClient client;
+  final SupabaseClient? client;
 
   /// Per-record boundary shared with the form/model money utility.
   static const maxMinorUnits = Money.maxMinorUnits;
@@ -66,40 +65,12 @@ class CloudDbService {
     }
     return amount.toDouble() / 100;
   }
-=======
-/// Temporary query abstraction retained until repositories move to Supabase.
-class CloudDBQuery {
-  final String objectTypeName;
-  CloudDBQuery(this.objectTypeName);
-  void equalTo(String field, dynamic value) {}
-  void orderBy(String field, {bool ascending = true}) {}
-}
 
-class CloudDbService {
-  Future<void> init() async {
-    // Data integration is intentionally deferred.
+  Future<void> upsertObject(String table, List<Map<String, dynamic>> objects) async {
+    throw UnsupportedError('Direct table writes are no longer supported.');
   }
 
-  Future<List<Map<String, dynamic>>> executeQuery(CloudDBQuery query) async {
-    return [];
+  Future<void> deleteObject(String table, List<String> ids) async {
+    throw UnsupportedError('Direct table deletes are no longer supported.');
   }
-
-  Future<void> upsertObject(
-    String objectTypeName,
-    List<Map<String, dynamic>> objects,
-  ) async {
-    throw UnsupportedError(
-      'Saving $objectTypeName is not available yet. No data was saved.',
-    );
-  }
-
-  Future<void> deleteObject(
-    String objectTypeName,
-    List<Map<String, dynamic>> objects,
-  ) async {
-    throw UnsupportedError(
-      'Deleting $objectTypeName is not available yet. No data was deleted.',
-    );
-  }
->>>>>>> 256bad7a74c0ded4604d24e4f10508428fe75ac3
 }

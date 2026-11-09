@@ -27,6 +27,10 @@ class Money {
     return units.toInt();
   }
 
+  static int toMinor(double amount) => toMinorUnits(amount);
+  static double fromMinor(int units) => fromMinorUnits(units);
+  static String formatMinor(int units) => formatMinorUnits(units);
+
   /// Currency code is supplied separately by the group, never inferred as USD.
   static String formatMinorUnits(int units) {
     _checkRange(units);
